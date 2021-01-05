@@ -6,39 +6,44 @@
 
     <groupId>se.deogun</groupId>
     <artifactId>aes</artifactId>
-    <version>0.1</version>
+    <version>0.1.1</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
+        <org.apache.commons.commons-lang3>3.11</org.apache.commons.commons-lang3>
+        <commons-validator.commons-validator>1.7</commons-validator.commons-validator>
+        <commons-codec.commons-codec>1.15</commons-codec.commons-codec>
+        <org.junit.jupiter.junit-jupiter-engine>5.7.0</org.junit.jupiter.junit-jupiter-engine>
+        <org.mockito.mockito-junit-jupiter>3.7.0</org.mockito.mockito-junit-jupiter>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
+            <version>${org.apache.commons.commons-lang3}</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.7</version>
+            <version>${commons-validator.commons-validator}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
+            <version>${commons-codec.commons-codec}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.0</version>
+            <version>${org.junit.jupiter.junit-jupiter-engine}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>3.6.28</version>
+            <version>${org.mockito.mockito-junit-jupiter}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
