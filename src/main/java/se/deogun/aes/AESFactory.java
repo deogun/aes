@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import static se.deogun.aes.algorithms.Result.failure;
 
 public final class AESFactory {
-    public static AES aesWith(final AESContext<GCMContext> context) {
+    public static AES aes(final AESContext<GCMContext> context) {
         notNull(context);
 
         return new AES() {
@@ -21,8 +21,8 @@ public final class AESFactory {
 
                 try {
                     return new GCM(context.encryption()).encrypt(data);
-                } catch (Exception e) {
-                    return failure(new InternalFailure(e.getClass()));
+                } catch (Throwable e) {
+                    return failure(new AESFailure(e.getClass()));
                 }
             }
 
@@ -32,8 +32,8 @@ public final class AESFactory {
 
                 try {
                     return new GCM(context.decryption()).decrypt(data);
-                } catch (Exception e) {
-                    return failure(new InternalFailure(e.getClass()));
+                } catch (Throwable e) {
+                    return failure(new AESFailure(e.getClass()));
                 }
             }
         };

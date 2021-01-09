@@ -25,8 +25,8 @@ public final class AESContextFactory {
         notNull(secret);
         notNull(initVector);
         notNull(aad);
-        isTrue(maxNoEncryptions > 0);
-        isTrue(maxNoDecryptions > 0);
+        isTrue(maxNoEncryptions > -1);
+        isTrue(maxNoDecryptions > -1);
 
         final var encryptionContext = new GCMContext(initVector, secret, aad, new AtomicInteger(maxNoEncryptions));
         final var decryptionContext = new GCMContext(initVector, secret, aad, new AtomicInteger(maxNoDecryptions));

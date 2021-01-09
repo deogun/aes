@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static se.deogun.aes.AESContextFactory.gcm;
-import static se.deogun.aes.AESFactory.aesWith;
+import static se.deogun.aes.AESFactory.aes;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,8 +22,8 @@ public class Main {
         final var transactionId1 = uuid1.toString();
         final var uuid2 = UUID.randomUUID();
         final var secret = new Secret(serialize(secretKey()));
-        final var aes1 = aesWith(gcm(secret, new InitVector(uuid1), new AAD(randomAlphanumeric(8192))));
-        final var aes2 = aesWith(gcm(secret, new InitVector(uuid2), new AAD(uuid2.toString())));
+        final var aes1 = aes(gcm(secret, new InitVector(uuid1), new AAD(randomAlphanumeric(8192))));
+        final var aes2 = aes(gcm(secret, new InitVector(uuid2), new AAD(uuid2.toString())));
 
         final Result<? extends Throwable, byte[], AESRejectReason> encryptResult1 = aes1.encrypt("some message 12345".getBytes());
         encryptResult1
