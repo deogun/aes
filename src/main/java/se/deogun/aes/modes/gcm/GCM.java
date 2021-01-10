@@ -3,6 +3,7 @@ package se.deogun.aes.modes.gcm;
 import se.deogun.aes.modes.AES;
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
+import se.deogun.aes.modes.Secret;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -22,16 +23,11 @@ import static org.apache.commons.lang3.Validate.notNull;
 import static se.deogun.aes.modes.AESRejectReason.*;
 import static se.deogun.aes.modes.Result.*;
 
-public final class GCM implements AES {
-    private final Context context;
-
-    public GCM(final Context context) {
-        this.context = notNull(context);
-    }
-
-    @Override
-    public final Result<Throwable, byte[], AESRejectReason> encrypt(final byte[] data) {
+public final class GCM {
+    public final Result<Throwable, byte[], AESRejectReason> encrypt(final byte[] data, final Secret secret, final AAD aad) {
         notNull(data);
+        notNull(secret);
+        notNull(aad);
 
         try {
             final var iv = new byte[12];
@@ -40,15 +36,14 @@ public final class GCM implements AES {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
             final var parameters = new GCMParameterSpec(128, iv);
 
-            cipher.init(ENCRYPT_MODE, context.secret(), parameters);
-            cipher.updateAAD(context.aad());
+            cipher.init(ENCRYPT_MODE, secret.keySpecification(), parameters);
+            cipher.updateAAD(aad.value());
             final var cipherText = cipher.doFinal(data);
 
             final var byteBuffer = ByteBuffer.allocate(iv.length + cipherText.length);
             byteBuffer.put(iv);
             byteBuffer.put(cipherText);
-            final var array = byteBuffer.array();
-            return accept(array);
+            return accept(byteBuffer.array());
             //return process(data, ENCRYPT_MODE);
         } catch (BadPaddingException | IllegalBlockSizeException e) {
             return reject(UNABLE_TO_ENCRYPT_DATA);
@@ -57,15 +52,16 @@ public final class GCM implements AES {
         }
     }
 
-    @Override
-    public final Result<Throwable, byte[], AESRejectReason> decrypt(final byte[] data) {
+    public final Result<Throwable, byte[], AESRejectReason> decrypt(final byte[] data, final Secret secret, final AAD aad) {
         notNull(data);
+        notNull(secret);
+        notNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
             AlgorithmParameterSpec spec = new GCMParameterSpec(128, data, 0, 12);
-            cipher.init(DECRYPT_MODE, context.secret(), spec);
-            cipher.updateAAD(context.aad());
+            cipher.init(DECRYPT_MODE, secret.keySpecification(), spec);
+            cipher.updateAAD(aad.value());
             return accept(cipher.doFinal(data, 12, data.length - 12));
 
             //  return process(data, DECRYPT_MODE);
