@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,8 +7,8 @@ import java.io.ObjectOutput;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static se.deogun.aes.algorithms.SecretKeyFactory.nonBase64EncodedKey;
-import static se.deogun.aes.algorithms.SecretKeyFactory.secretKey;
+import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.SecretKeyFactory.secretKey;
 
 class SecretTest {
     static final byte[] SECRET_KEY_1 = secretKey();

@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import java.io.Externalizable;
 import java.io.ObjectInput;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.copyOfRange;
 import static org.apache.commons.lang3.Validate.*;
-import static se.deogun.aes.algorithms.InitVector.DataSelectionStrategy.FIRST_12_BYTES;
+import static se.deogun.aes.modes.InitVector.DataSelectionStrategy.FIRST_12_BYTES;
 
 @SuppressWarnings("ExternalizableWithoutPublicNoArgConstructor")
 public final class InitVector implements Externalizable, Serializable {

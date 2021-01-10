@@ -1,8 +1,8 @@
-package se.deogun.aes.algorithms.gcm;
+package se.deogun.aes.modes.gcm;
 
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.algorithms.InitVector;
-import se.deogun.aes.algorithms.Secret;
+import se.deogun.aes.modes.InitVector;
+import se.deogun.aes.modes.Secret;
 
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static se.deogun.aes.AESContextFactory.gcm;
-import static se.deogun.aes.algorithms.SecretKeyFactory.secretKey;
+import static se.deogun.aes.modes.SecretKeyFactory.secretKey;
 
 class GCMContextTest {
     @Test
@@ -79,7 +79,7 @@ class GCMContextTest {
         assertEquals(context.hashCode(), context().hashCode());
     }
 
-    private GCMContext context() {
+    private Context context() {
         return gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data")).encryption();
     }
 }

@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static se.deogun.aes.algorithms.AESRejectReason.INVALID_GCM_TAG;
+import static se.deogun.aes.modes.AESRejectReason.INVALID_GCM_TAG;
 
 class ResultTest {
     static final RuntimeException EXCEPTION = new RuntimeException();

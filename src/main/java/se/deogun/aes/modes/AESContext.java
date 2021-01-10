@@ -1,7 +1,7 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 /**
- * Context defining the AES algorithm to be used
+ * Context defining the AES mode to be used
  * @param <T> Context Type
  */
 public interface AESContext<T> {

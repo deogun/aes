@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import java.security.GeneralSecurityException;
 

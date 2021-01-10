@@ -1,8 +1,8 @@
-package se.deogun.aes.algorithms.gcm;
+package se.deogun.aes.modes.gcm;
 
-import se.deogun.aes.algorithms.AES;
-import se.deogun.aes.algorithms.AESRejectReason;
-import se.deogun.aes.algorithms.Result;
+import se.deogun.aes.modes.AES;
+import se.deogun.aes.modes.AESRejectReason;
+import se.deogun.aes.modes.Result;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,13 +15,13 @@ import java.security.NoSuchAlgorithmException;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static org.apache.commons.lang3.Validate.notNull;
-import static se.deogun.aes.algorithms.AESRejectReason.*;
-import static se.deogun.aes.algorithms.Result.*;
+import static se.deogun.aes.modes.AESRejectReason.*;
+import static se.deogun.aes.modes.Result.*;
 
 public final class GCM implements AES {
-    private final GCMContext context;
+    private final Context context;
 
-    public GCM(final GCMContext context) {
+    public GCM(final Context context) {
         this.context = notNull(context);
     }
 

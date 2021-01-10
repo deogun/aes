@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import java.util.Optional;
 import java.util.function.Consumer;

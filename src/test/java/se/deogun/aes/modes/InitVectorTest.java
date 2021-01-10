@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static java.util.Arrays.copyOfRange;
 import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static se.deogun.aes.algorithms.InitVector.DataSelectionStrategy.*;
+import static se.deogun.aes.modes.InitVector.DataSelectionStrategy.*;
 
 class InitVectorTest {
     @Test

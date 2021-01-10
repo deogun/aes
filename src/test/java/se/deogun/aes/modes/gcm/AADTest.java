@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms.gcm;
+package se.deogun.aes.modes.gcm;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;

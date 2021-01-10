@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms.gcm;
+package se.deogun.aes.modes.gcm;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.copyOf;

@@ -1,7 +1,7 @@
-package se.deogun.aes.algorithms.gcm;
+package se.deogun.aes.modes.gcm;
 
-import se.deogun.aes.algorithms.InitVector;
-import se.deogun.aes.algorithms.Secret;
+import se.deogun.aes.modes.InitVector;
+import se.deogun.aes.modes.Secret;
 
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -13,14 +13,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-public final class GCMContext implements Externalizable, Serializable {
+public final class Context implements Externalizable, Serializable {
     private static final int GCM_TAG_LENGTH_IN_BITS = 128;
     private final transient GCMParameterSpec parameters;
     private final transient Secret secret;
     private final transient AAD aad;
     private final AtomicInteger limit;
 
-    public GCMContext(final InitVector initVector, final Secret secret, final AAD aad, final AtomicInteger limit) {
+    public Context(final InitVector initVector, final Secret secret, final AAD aad, final AtomicInteger limit) {
         this.parameters = new GCMParameterSpec(GCM_TAG_LENGTH_IN_BITS, notNull(initVector).value());
         this.secret = notNull(secret);
         this.aad = notNull(aad);

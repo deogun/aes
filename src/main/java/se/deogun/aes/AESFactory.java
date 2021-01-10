@@ -1,18 +1,25 @@
 package se.deogun.aes;
 
-import se.deogun.aes.algorithms.AES;
-import se.deogun.aes.algorithms.AESContext;
-import se.deogun.aes.algorithms.AESRejectReason;
-import se.deogun.aes.algorithms.Result;
-import se.deogun.aes.algorithms.gcm.GCM;
-import se.deogun.aes.algorithms.gcm.GCMContext;
+import se.deogun.aes.modes.AES;
+import se.deogun.aes.modes.AESRejectReason;
+import se.deogun.aes.modes.Result;
+import se.deogun.aes.modes.gcm.GCM;
+import se.deogun.aes.modes.gcm.GCMContext;
 
 import static org.apache.commons.lang3.Validate.notNull;
-import static se.deogun.aes.algorithms.Result.failure;
+import static se.deogun.aes.modes.Result.failure;
 
+/**
+ * Factory to create different AES modes
+ */
 public final class AESFactory {
-    public static AES aes(final AESContext<GCMContext> context) {
-        notNull(context);
+    /**
+     * Creates an AES instance with GCM gcmContext
+     * @param gcmContext contains GCM specific configuration
+     * @return AES GCM instance
+     */
+    public static AES aesWith(final GCMContext gcmContext) {
+        notNull(gcmContext);
 
         return new AES() {
             @Override
@@ -20,7 +27,7 @@ public final class AESFactory {
                 notNull(data);
 
                 try {
-                    return new GCM(context.encryption()).encrypt(data);
+                    return new GCM(gcmContext.encryption()).encrypt(data);
                 } catch (Throwable e) {
                     return failure(new AESFailure(e.getClass()));
                 }
@@ -31,7 +38,7 @@ public final class AESFactory {
                 notNull(data);
 
                 try {
-                    return new GCM(context.decryption()).decrypt(data);
+                    return new GCM(gcmContext.decryption()).decrypt(data);
                 } catch (Throwable e) {
                     return failure(new AESFailure(e.getClass()));
                 }

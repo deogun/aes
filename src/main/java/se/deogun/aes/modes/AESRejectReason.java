@@ -1,4 +1,4 @@
-package se.deogun.aes.algorithms;
+package se.deogun.aes.modes;
 
 public enum AESRejectReason {
     AES_GCM_NOT_AVAILABLE_ON_THIS_SYSTEM,
