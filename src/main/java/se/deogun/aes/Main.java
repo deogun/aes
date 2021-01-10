@@ -13,7 +13,6 @@ import java.util.Base64;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static se.deogun.aes.AESContextFactory.gcm;
 import static se.deogun.aes.AESFactory.aesGCM;
 
 public class Main {

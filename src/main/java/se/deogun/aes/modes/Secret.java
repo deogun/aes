@@ -19,11 +19,11 @@ public final class Secret implements Externalizable, Serializable {
         this(notNull(encodedKey).getBytes());
     }
 
-    public Secret(final byte[] key) {
-        notNull(key);
-        isTrue(Base64.isBase64(key));
+    public Secret(final byte[] encodedKey) {
+        notNull(encodedKey);
+        isTrue(Base64.isBase64(encodedKey));
 
-        this.keySpec = new SecretKeySpec(Base64.decodeBase64(key), "AES");
+        this.keySpec = new SecretKeySpec(Base64.decodeBase64(encodedKey), "AES");
     }
 
     public final SecretKeySpec keySpecification() {
@@ -31,27 +31,27 @@ public final class Secret implements Externalizable, Serializable {
     }
 
     @Override
-    public void writeExternal(final ObjectOutput out)  {
+    public final void writeExternal(final ObjectOutput out)  {
         deny();
     }
 
     @Override
-    public void readExternal(final ObjectInput in) {
+    public final void readExternal(final ObjectInput in) {
         deny();
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "***** SENSITIVE VALUE *****";
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public final boolean equals(final Object o) {
         return false;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return 0;
     }
 

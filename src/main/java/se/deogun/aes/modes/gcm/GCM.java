@@ -1,6 +1,5 @@
 package se.deogun.aes.modes.gcm;
 
-import se.deogun.aes.modes.AES;
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
 import se.deogun.aes.modes.Secret;
@@ -8,19 +7,16 @@ import se.deogun.aes.modes.Secret;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import java.nio.ByteBuffer;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static org.apache.commons.lang3.Validate.notNull;
-import static se.deogun.aes.modes.AESRejectReason.*;
+import static se.deogun.aes.modes.AESRejectReason.UNABLE_TO_DECRYPT_DATA;
+import static se.deogun.aes.modes.AESRejectReason.UNABLE_TO_ENCRYPT_DATA;
 import static se.deogun.aes.modes.Result.*;
 
 public final class GCM {
