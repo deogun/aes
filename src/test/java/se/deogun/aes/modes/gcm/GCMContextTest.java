@@ -1,7 +1,6 @@
 package se.deogun.aes.modes.gcm;
 
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.modes.InitVector;
 import se.deogun.aes.modes.Secret;
 
 import java.io.ObjectInput;
@@ -15,40 +14,6 @@ import static se.deogun.aes.AESContextFactory.gcm;
 import static se.deogun.aes.modes.SecretKeyFactory.secretKey;
 
 class GCMContextTest {
-    @Test
-    void should_only_allow_single_encrypt_by_default() {
-        final var context = gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data"));
-
-        assertDoesNotThrow(() -> context.encryption().parameters());
-        assertThrows(GCMLimitViolation.class, () -> context.encryption().parameters());
-    }
-
-    @Test
-    void should_only_allow_single_decrypt_by_default() {
-        final var context = gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data"));
-
-        assertDoesNotThrow(() -> context.decryption().parameters());
-        assertThrows(GCMLimitViolation.class, () -> context.decryption().parameters());
-    }
-
-    @Test
-    void should_allow_two_encrypt_with_same_nonce() {
-        final var context = gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data"), 2, 2);
-
-        assertDoesNotThrow(() -> context.encryption().parameters());
-        assertDoesNotThrow(() -> context.encryption().parameters());
-        assertThrows(GCMLimitViolation.class, () -> context.encryption().parameters());
-    }
-
-    @Test
-    void should_allow_two_decrypt_with_same_nonce() {
-        final var context = gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data"), 2, 2);
-
-        assertDoesNotThrow(() -> context.decryption().parameters());
-        assertDoesNotThrow(() -> context.decryption().parameters());
-        assertThrows(GCMLimitViolation.class, () -> context.decryption().parameters());
-    }
-
     @Test
     void should_not_allow_externalization() {
         final var context = context();
@@ -80,6 +45,6 @@ class GCMContextTest {
     }
 
     private Context context() {
-        return gcm(new Secret(secretKey()), new InitVector(randomUUID()), new AAD("some aad data")).encryption();
+        return gcm(new Secret(secretKey()), new AAD("some aad data")).encryption();
     }
 }

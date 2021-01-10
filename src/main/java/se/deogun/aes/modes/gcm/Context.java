@@ -1,6 +1,5 @@
 package se.deogun.aes.modes.gcm;
 
-import se.deogun.aes.modes.InitVector;
 import se.deogun.aes.modes.Secret;
 
 import javax.crypto.spec.GCMParameterSpec;
@@ -14,31 +13,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.commons.lang3.Validate.notNull;
 
 public final class Context implements Externalizable, Serializable {
-    private static final int GCM_TAG_LENGTH_IN_BITS = 128;
-    private final transient GCMParameterSpec parameters;
     private final transient Secret secret;
     private final transient AAD aad;
-    private final AtomicInteger limit;
 
-    public Context(final InitVector initVector, final Secret secret, final AAD aad, final AtomicInteger limit) {
-        this.parameters = new GCMParameterSpec(GCM_TAG_LENGTH_IN_BITS, notNull(initVector).value());
+    public Context(final Secret secret, final AAD aad) {
         this.secret = notNull(secret);
         this.aad = notNull(aad);
-        this.limit = notNull(limit);
     }
 
-    public SecretKeySpec secret() {
+    public final SecretKeySpec secret() {
         return secret.keySpecification();
     }
 
-    public GCMParameterSpec parameters() {
-        if (limit.getAndDecrement() > 0) {
-            return parameters;
-        }
-        throw new GCMLimitViolation();
-    }
-
-    public byte[] aad() {
+    public final byte[] aad() {
         return aad.value();
     }
 

@@ -14,12 +14,12 @@ import static se.deogun.aes.modes.Result.failure;
  */
 public final class AESFactory {
     /**
-     * Creates an AES instance with GCM gcmContext
-     * @param gcmContext contains GCM specific configuration
+     * Creates an AES instance with GCM context
+     * @param context contains GCM specific configuration
      * @return AES GCM instance
      */
-    public static AES aesWith(final GCMContext gcmContext) {
-        notNull(gcmContext);
+    public static AES aesWith(final GCMContext context) {
+        notNull(context);
 
         return new AES() {
             @Override
@@ -27,7 +27,7 @@ public final class AESFactory {
                 notNull(data);
 
                 try {
-                    return new GCM(gcmContext.encryption()).encrypt(data);
+                    return new GCM(context.encryption()).encrypt(data);
                 } catch (Throwable e) {
                     return failure(new AESFailure(e.getClass()));
                 }
@@ -38,7 +38,7 @@ public final class AESFactory {
                 notNull(data);
 
                 try {
-                    return new GCM(gcmContext.decryption()).decrypt(data);
+                    return new GCM(context.decryption()).decrypt(data);
                 } catch (Throwable e) {
                     return failure(new AESFailure(e.getClass()));
                 }
