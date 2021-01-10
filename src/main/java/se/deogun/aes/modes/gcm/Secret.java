@@ -1,4 +1,4 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.modes.gcm;
 
 import org.apache.commons.codec.binary.Base64;
 

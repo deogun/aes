@@ -12,12 +12,12 @@ public interface AES {
      * @param data plain text
      * @return result of the encrypt operation
      */
-    Result<Throwable, byte[], AESRejectReason> encrypt(byte[] data);
+    Result<? super AESFailure, byte[], AESRejectReason> encrypt(byte[] data);
 
     /**
      * Decrypts the provided data using the mode defined when creating the AES instance
      * @param data encrypted data
      * @return result of the decrypt operation
      */
-    Result<Throwable, byte[], AESRejectReason> decrypt(byte[] data);
+    Result<? super AESFailure, byte[], AESRejectReason> decrypt(byte[] data);
 }

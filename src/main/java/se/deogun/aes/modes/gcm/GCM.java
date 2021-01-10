@@ -2,7 +2,6 @@ package se.deogun.aes.modes.gcm;
 
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.Secret;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;

@@ -1,6 +1,7 @@
 package se.deogun.aes.modes;
 
 import org.junit.jupiter.api.Test;
+import se.deogun.aes.modes.gcm.Secret;
 
 import java.io.ObjectInput;
 import java.io.ObjectOutput;

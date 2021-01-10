@@ -2,15 +2,13 @@ package se.deogun.aes;
 
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.Secret;
+import se.deogun.aes.modes.gcm.Secret;
 import se.deogun.aes.modes.gcm.AAD;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static se.deogun.aes.AESFactory.aesGCM;
