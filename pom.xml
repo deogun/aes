@@ -6,7 +6,7 @@
 
     <groupId>se.deogun</groupId>
     <artifactId>aes</artifactId>
-    <version>0.4.1</version>
+    <version>0.5.0</version>
     <description>AES library for encrypting and decrypting data</description>
     <url>https://github.com/deogun/aes</url>
 
@@ -26,7 +26,7 @@
         <commons-validator.commons-validator>1.7</commons-validator.commons-validator>
         <commons-codec.commons-codec>1.15</commons-codec.commons-codec>
         <org.junit.jupiter.junit-jupiter-engine>5.7.0</org.junit.jupiter.junit-jupiter-engine>
-        <org.mockito.mockito-junit-jupiter>3.7.0</org.mockito.mockito-junit-jupiter>
+        <org.mockito.mockito-junit-jupiter>3.7.7</org.mockito.mockito-junit-jupiter>
     </properties>
 
 
@@ -95,6 +95,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
             </plugin>
         </plugins>
     </build>

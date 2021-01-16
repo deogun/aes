@@ -16,8 +16,8 @@ class SecretTest {
     static final byte[] SECRET_KEY_2 = secretKey();
 
     @Test
-    void should_require_base64_encoded_key() {
-        assertThrows(IllegalArgumentException.class, () -> new Secret(nonBase64EncodedKey()));
+    void should_support_non_base64_encoded_key() {
+        assertDoesNotThrow(() -> new Secret(nonBase64EncodedKey()));
     }
 
     @Test

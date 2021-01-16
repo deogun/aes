@@ -8,6 +8,8 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
+import static org.apache.commons.codec.binary.Base64.isBase64;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -21,9 +23,8 @@ public final class Secret implements Externalizable, Serializable {
 
     public Secret(final byte[] encodedKey) {
         notNull(encodedKey);
-        isTrue(Base64.isBase64(encodedKey));
 
-        this.keySpec = new SecretKeySpec(Base64.decodeBase64(encodedKey), "AES");
+        this.keySpec = new SecretKeySpec(isBase64(encodedKey) ? decodeBase64(encodedKey) : encodedKey, "AES");
     }
 
     public final SecretKeySpec keySpecification() {

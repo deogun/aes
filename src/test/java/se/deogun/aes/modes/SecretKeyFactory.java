@@ -11,7 +11,7 @@ public class SecretKeyFactory {
 
     public static byte[] nonBase64EncodedKey() {
         try {
-            final var instance = KeyGenerator.getInstance("AES", "SunJCE");
+            final var instance = KeyGenerator.getInstance("AES");
             instance.init(256, SecureRandom.getInstanceStrong());
             return instance.generateKey().getEncoded();
         } catch (Exception e) {
