@@ -22,23 +22,25 @@ public final class GCM {
     private static final int TAG_LENGTH_IN_BITS = 128;
     private static final int START_INDEX_OF_IV = 0;
     private static final int NUMBER_OF_IV_BYTES = 12;
+    private static final int IV_NUMBER_OF_BYTES = 12;
 
     private static final class UnableToCreateSecureRandom extends Exception {
     }
 
-    public final Result<Throwable, byte[], AESRejectReason> encrypt(final byte[] data, final Secret secret, final AAD aad) {
-        notNull(data);
+    public final Result<Throwable, byte[], AESRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
+        notNull(plainText);
         notNull(secret);
         notNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
             final byte[] initVector = initVector();
+            final var gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_IN_BITS, initVector);
 
-            cipher.init(ENCRYPT_MODE, secret.keySpecification(), new GCMParameterSpec(TAG_LENGTH_IN_BITS, initVector));
+            cipher.init(ENCRYPT_MODE, secret.keySpecification(), gcmParameterSpec);
             cipher.updateAAD(aad.value());
 
-            return accept(encryptedData(initVector, cipher.doFinal(data)));
+            return accept(encryptedData(initVector, cipher.doFinal(plainText)));
 
         } catch (UnableToCreateSecureRandom e) {
             return reject(NO_SECURE_RANDOM_ALGORITHM_AVAILABLE_ON_THIS_SYSTEM);
@@ -53,18 +55,19 @@ public final class GCM {
         }
     }
 
-    public final Result<Throwable, byte[], AESRejectReason> decrypt(final byte[] data, final Secret secret, final AAD aad) {
-        notNull(data);
+    public final Result<Throwable, byte[], AESRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
+        notNull(encryptedData);
         notNull(secret);
         notNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            final var gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_IN_BITS, encryptedData, START_INDEX_OF_IV, NUMBER_OF_IV_BYTES);
 
-            cipher.init(DECRYPT_MODE, secret.keySpecification(), new GCMParameterSpec(TAG_LENGTH_IN_BITS, data, START_INDEX_OF_IV, NUMBER_OF_IV_BYTES));
+            cipher.init(DECRYPT_MODE, secret.keySpecification(), gcmParameterSpec);
             cipher.updateAAD(aad.value());
 
-            return accept(cipher.doFinal(data, START_INDEX_OF_ENCRYPTED_DATA, data.length - 12));
+            return accept(cipher.doFinal(encryptedData, START_INDEX_OF_ENCRYPTED_DATA, encryptedData.length - IV_NUMBER_OF_BYTES));
 
         } catch (IllegalStateException | BadPaddingException | IllegalBlockSizeException e) {
             return reject(UNABLE_TO_DECRYPT_DATA);
