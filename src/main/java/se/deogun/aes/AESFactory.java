@@ -24,12 +24,13 @@ public final class AESFactory {
      *
      * @param secret secret key
      * @param aad    additional authentication data
-     * @return AES GCM instance
+     * @return AES GCM service
      */
     public static AES aesGCM(final Secret secret, final AAD aad) {
         notNull(secret);
         notNull(aad);
 
+        //TODO [DD]: this has grown a bit – consider a new design...
         return new AES() {
             @Override
             public final Result<? super AESFailure, byte[], AESRejectReason> encrypt(final byte[] plain) {

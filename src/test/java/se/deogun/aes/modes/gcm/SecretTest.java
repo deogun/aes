@@ -1,7 +1,6 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.modes.gcm;
 
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.modes.gcm.Secret;
 
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -10,8 +9,8 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
-import static se.deogun.aes.modes.SecretKeyFactory.secretKey;
+import static se.deogun.aes.modes.gcm.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.gcm.SecretKeyFactory.secretKey;
 import static se.deogun.aes.modes.gcm.Secret.secret;
 import static se.deogun.aes.modes.gcm.Secret.secretFromBase64EncodedKey;
 
@@ -53,6 +52,7 @@ class SecretTest {
     @Test
     void should_not_respect_equals() {
         final Secret secret = secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_1);
+
         assertFalse(secret.equals(secret));
         assertFalse(secret.equals(secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_2)));
     }
