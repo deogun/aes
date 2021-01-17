@@ -18,13 +18,13 @@ public final class AAD {
     }
 
     private static void isValid(final String input) {
-        if(input == null || input.isBlank()) {
+        if (input == null || input.isBlank()) {
             throw new IllegalArgumentException("Null or blank not allowed as input");
         }
     }
 
-    private static void satisfiesUpperBound(final boolean predicate) {
-        if(!predicate) {
+    private static void satisfiesUpperBound(final boolean invariant) {
+        if (!invariant) {
             throw new IllegalArgumentException("Invariant failure for input");
         }
     }
