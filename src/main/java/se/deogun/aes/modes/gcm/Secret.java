@@ -50,9 +50,9 @@ public final class Secret implements Externalizable, Serializable {
         return keySpec;
     }
 
+    // See RFC 4648 Table 1.
+    // Note: The padding character is excluded to allow detection of illegal occurrence before possible padding.
     private static Set<Byte> base64Alphabet() {
-        //See RFC 4648 Table 1.
-        //Note: the padding character is excluded to allow detection of illegal occurrence before possible padding
         final var character = "+/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".getBytes(UTF_8);
         final var alphabet = new HashSet<Byte>();
 
@@ -62,14 +62,20 @@ public final class Secret implements Externalizable, Serializable {
         return alphabet;
     }
 
+    // Please note that this isn't completely fool proof since it's impossible to know if a string is
+    // Base64 encoded or not. For example, the string "aaaa" satisfies the Base64 requirements regardless if
+    // it is encoded or not.
     private static boolean satisfiesBase64(final byte[] candidate) {
+        // The length of a valid Base64 encoded string must be divisible by 4
         if (candidate.length % 4 != 0) {
             return false;
         }
 
         for (int i = 0; i < candidate.length; i++) {
+            // Padding is only allowed in the last three bytes. Hence no padding character
+            // is allowed prior to those.
             if (i < candidate.length - 3) {
-                if(!BASE64_ALPHABET.contains(candidate[i])) {
+                if (!BASE64_ALPHABET.contains(candidate[i])) {
                     return false;
                 }
             } else if (!BASE64_ALPHABET.contains(candidate[i])) {
