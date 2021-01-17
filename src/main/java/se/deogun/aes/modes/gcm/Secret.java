@@ -1,17 +1,17 @@
 package se.deogun.aes.modes.gcm;
 
+import se.deogun.aes.modes.InternalValidationFailure;
+
 import javax.crypto.spec.SecretKeySpec;
 import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.commons.lang3.Validate.*;
 
 @SuppressWarnings("ExternalizableWithoutPublicNoArgConstructor")
 public final class Secret implements Externalizable, Serializable {
@@ -20,29 +20,29 @@ public final class Secret implements Externalizable, Serializable {
     private transient final SecretKeySpec keySpec;
 
     private Secret(final byte[] key) {
-        notNull(key);
+        isNotNull(key);
         this.keySpec = new SecretKeySpec(key, "AES");
     }
 
     public static Secret secret(final byte[] key) {
-        notNull(key);
+        isNotNull(key);
         return new Secret(key);
     }
 
     public static Secret secret(final String key) {
-        notEmpty(key);
+        isNotNull(key);
         return new Secret(key.getBytes(UTF_8));
     }
 
     public static Secret secretFromBase64EncodedKey(final String key) {
-        notNull(key);
-        isTrue(satisfiesBase64(key.getBytes(UTF_8)));
+        isNotNull(key);
+        satisfiesInvariant(satisfiesBase64(key.getBytes(UTF_8)));
         return new Secret(Base64.getDecoder().decode(key.getBytes(UTF_8)));
     }
 
     public static Secret secretFromBase64EncodedKey(final byte[] key) {
-        notNull(key);
-        isTrue(satisfiesBase64(key));
+        isNotNull(key);
+        satisfiesInvariant(satisfiesBase64(key));
         return new Secret(Base64.getDecoder().decode(key));
     }
 
@@ -81,6 +81,23 @@ public final class Secret implements Externalizable, Serializable {
         return true;
     }
 
+    private static void isNotNull(final byte[] input) {
+        if (input == null) {
+            throw new InternalValidationFailure();
+        }
+    }
+
+    private static void isNotNull(final Object input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Null not allowed as input");
+        }
+    }
+
+    private static void satisfiesInvariant(final boolean invariant) {
+        if (!invariant) {
+            throw new IllegalArgumentException("Input violates invariant");
+        }
+    }
 
     @Override
     public final void writeExternal(final ObjectOutput out) {

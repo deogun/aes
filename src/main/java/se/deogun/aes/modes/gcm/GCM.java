@@ -1,6 +1,7 @@
 package se.deogun.aes.modes.gcm;
 
 import se.deogun.aes.modes.AESRejectReason;
+import se.deogun.aes.modes.InternalValidationFailure;
 import se.deogun.aes.modes.Result;
 
 import javax.crypto.*;
@@ -15,7 +16,6 @@ import java.security.SecureRandom;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static org.apache.commons.lang3.Validate.notNull;
 import static se.deogun.aes.modes.AESRejectReason.*;
 import static se.deogun.aes.modes.Result.accept;
 import static se.deogun.aes.modes.Result.reject;
@@ -177,5 +177,11 @@ public final class GCM {
         byteBuffer.put(iv);
         byteBuffer.put(encrypted);
         return byteBuffer.array();
+    }
+
+    private static void notNull(final Object input) {
+        if (input == null) {
+            throw new InternalValidationFailure();
+        }
     }
 }

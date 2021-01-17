@@ -4,8 +4,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static org.apache.commons.lang3.Validate.notNull;
-import static org.apache.commons.lang3.Validate.validState;
+import static java.util.Optional.ofNullable;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TYPE> {
@@ -21,11 +20,13 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
     }
 
     private Result(final Success<ACCEPT_TYPE, REJECT_TYPE> success, final Failure<FAILURE_TYPE> failure) {
-        this.failure = Optional.ofNullable(failure);
-        this.success = Optional.ofNullable(success);
+        this.failure = ofNullable(failure);
+        this.success = ofNullable(success);
 
-        validState(this.success.isEmpty() && this.failure.isPresent() ||
-                this.success.isPresent() && this.failure.isEmpty());
+        satisfiesInvariant(
+                this.success.isEmpty() && this.failure.isPresent() ||
+                        this.success.isPresent() && this.failure.isEmpty()
+        );
     }
 
     public static <F extends Throwable, A, R> Result<F, A, R> failure(final F exception) {
@@ -104,9 +105,9 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
     public <T> T transform(final Function<ACCEPT_TYPE, T> acceptTransformer,
                            final Function<REJECT_TYPE, T> rejectTransformer,
                            final Function<FAILURE_TYPE, T> failureTransformer) {
-        notNull(acceptTransformer);
-        notNull(rejectTransformer);
-        notNull(failureTransformer);
+        isNotNull(acceptTransformer);
+        isNotNull(rejectTransformer);
+        isNotNull(failureTransformer);
 
         return success
                 .map(value -> value.accept
@@ -133,8 +134,8 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
         }
 
         private Success(final Accept<A> accept, final Reject<R> reject) {
-            this.accept = Optional.ofNullable(accept);
-            this.reject = Optional.ofNullable(reject);
+            this.accept = ofNullable(accept);
+            this.reject = ofNullable(reject);
         }
 
         A accept() {
@@ -183,7 +184,19 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
         public final F exception;
 
         Failure(final F exception) {
-            this.exception = notNull(exception);
+            this.exception = exception;
+        }
+    }
+
+    private static void satisfiesInvariant(final boolean invariant) {
+        if (!invariant) {
+            throw new InternalValidationFailure();
+        }
+    }
+
+    private static void isNotNull(final Object input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Null not allowed as input");
         }
     }
 }

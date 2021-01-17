@@ -1,17 +1,16 @@
 package se.deogun.aes;
 
 import se.deogun.aes.modes.AESRejectReason;
+import se.deogun.aes.modes.InternalValidationFailure;
 import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.gcm.Secret;
 import se.deogun.aes.modes.gcm.AAD;
 import se.deogun.aes.modes.gcm.GCM;
+import se.deogun.aes.modes.gcm.Secret;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Supplier;
 
-import static org.apache.commons.lang3.Validate.isAssignableFrom;
-import static org.apache.commons.lang3.Validate.notNull;
 import static se.deogun.aes.modes.Result.failure;
 
 /**
@@ -91,8 +90,16 @@ public final class AESFactory {
     private static <T> Result<? super AESFailure, T, AESRejectReason> apply(final Supplier<Result<Throwable, T, AESRejectReason>> operation) {
         try {
             return operation.get();
+        } catch (InternalValidationFailure e) {
+            return failure(new AESFailure(e));
         } catch (Throwable e) {
             return failure(new AESFailure(e.getClass()));
+        }
+    }
+
+    private static void notNull(final Object input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Null not allowed as input");
         }
     }
 }

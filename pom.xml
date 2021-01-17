@@ -6,7 +6,7 @@
 
     <groupId>se.deogun</groupId>
     <artifactId>aes</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.2</version>
     <description>AES library for encrypting and decrypting data</description>
     <url>https://github.com/deogun/aes</url>
 
@@ -33,6 +33,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${org.apache.commons.commons-lang3}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

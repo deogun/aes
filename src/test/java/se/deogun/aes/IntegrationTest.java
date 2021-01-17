@@ -1,5 +1,6 @@
 package se.deogun.aes;
 
+import org.junit.jupiter.api.Test;
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
 import se.deogun.aes.modes.gcm.Secret;
@@ -13,8 +14,9 @@ import java.util.Base64;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static se.deogun.aes.AESFactory.aesGCM;
 
-public class Main {
-    public static void main(String[] args) {
+class IntegrationTest {
+    @Test
+    void integrationTest() {
         final var aes = aesGCM(Secret.secret(secretKey().getEncoded()), new AAD(randomAlphanumeric(8192)));
 
         final Result<? extends Throwable, byte[], AESRejectReason> encryptResult1 = aes.encrypt("some message 12345".getBytes());
