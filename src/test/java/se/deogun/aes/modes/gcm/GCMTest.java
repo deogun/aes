@@ -10,6 +10,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.*;
 import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.gcm.Secret.secret;
 
 class GCMTest {
 
@@ -17,7 +18,7 @@ class GCMTest {
     void should_support_encrypt_decrypt_of_input_output_streams() {
         final var data = randomAlphabetic(100000);
         final var outputStream = new ByteArrayOutputStream();
-        final var secret = new Secret(nonBase64EncodedKey());
+        final var secret = secret(nonBase64EncodedKey());
         final var aad = new AAD("some aad");
 
         new GCM().encrypt(data.getBytes(UTF_8), outputStream, secret, aad);
@@ -36,7 +37,7 @@ class GCMTest {
     @Test
     void should_support_encrypt_decrypt_of_byte_array() {
         final var data = randomAlphabetic(100000);
-        final var secret = new Secret(nonBase64EncodedKey());
+        final var secret = secret(nonBase64EncodedKey());
         final var aad = new AAD("some aad");
 
         final var encrypted = new GCM().encrypt(data.getBytes(UTF_8), secret, aad);

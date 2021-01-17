@@ -15,10 +15,10 @@ import java.security.SecureRandom;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
 import static se.deogun.aes.modes.AESRejectReason.*;
-import static se.deogun.aes.modes.Result.*;
+import static se.deogun.aes.modes.Result.accept;
+import static se.deogun.aes.modes.Result.reject;
 
 public final class GCM {
     private static final int START_INDEX_OF_ENCRYPTED_DATA = 12;

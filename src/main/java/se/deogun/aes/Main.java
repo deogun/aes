@@ -15,7 +15,7 @@ import static se.deogun.aes.AESFactory.aesGCM;
 
 public class Main {
     public static void main(String[] args) {
-        final var aes = aesGCM(new Secret(serialize(secretKey())), new AAD(randomAlphanumeric(8192)));
+        final var aes = aesGCM(Secret.secret(secretKey().getEncoded()), new AAD(randomAlphanumeric(8192)));
 
         final Result<? extends Throwable, byte[], AESRejectReason> encryptResult1 = aes.encrypt("some message 12345".getBytes());
         encryptResult1
