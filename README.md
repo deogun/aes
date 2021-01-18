@@ -35,6 +35,6 @@ aes.decrypt(encrypted, aad)
       .or(failure -> <actions if the decryption failed> );
 ```
 
-###Known Limitations
+### Known Limitations
 - The buffer load size in GCM is fixed to 16 KB when decrypting input streams. This is efficient on most 
   systems, but it might need to be variable. Buffer size will become configurable in future releases.
