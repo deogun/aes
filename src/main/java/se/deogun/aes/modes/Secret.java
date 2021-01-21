@@ -1,6 +1,4 @@
-package se.deogun.aes.modes.gcm;
-
-import se.deogun.aes.modes.InternalValidationFailure;
+package se.deogun.aes.modes;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.Externalizable;

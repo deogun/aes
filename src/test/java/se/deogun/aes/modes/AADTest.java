@@ -1,7 +1,8 @@
-package se.deogun.aes.modes.gcm;
+package se.deogun.aes.modes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import se.deogun.aes.modes.AAD;
 
 import java.util.Arrays;
 

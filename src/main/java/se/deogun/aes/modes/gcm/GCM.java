@@ -1,8 +1,6 @@
 package se.deogun.aes.modes.gcm;
 
-import se.deogun.aes.modes.AESRejectReason;
-import se.deogun.aes.modes.InternalValidationFailure;
-import se.deogun.aes.modes.Result;
+import se.deogun.aes.modes.*;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;

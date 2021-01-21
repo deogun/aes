@@ -1,6 +1,7 @@
 package se.deogun.aes.modes.gcm;
 
 import org.junit.jupiter.api.Test;
+import se.deogun.aes.modes.AAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,8 +10,8 @@ import java.util.Arrays;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.*;
-import static se.deogun.aes.modes.gcm.SecretKeyFactory.nonBase64EncodedKey;
-import static se.deogun.aes.modes.gcm.Secret.secret;
+import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.Secret.secret;
 
 class GCMTest {
 

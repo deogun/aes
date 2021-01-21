@@ -1,4 +1,4 @@
-package se.deogun.aes.modes.gcm;
+package se.deogun.aes.modes;
 
 import javax.crypto.KeyGenerator;
 import java.security.SecureRandom;
