@@ -5,21 +5,23 @@ import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.copyOf;
 
 @SuppressWarnings("ExternalizableWithoutPublicNoArgConstructor")
 public final class Secret implements Externalizable, Serializable {
     private static final int PADDING = 61;
     private static final Set<Byte> BASE64_ALPHABET = base64Alphabet();
-    private transient final SecretKeySpec keySpec;
+    private transient final byte[] key;
 
     private Secret(final byte[] key) {
         isNotNull(key);
-        this.keySpec = new SecretKeySpec(key, "AES");
+        this.key = copyOf(key, key.length);
     }
 
     public static Secret secret(final byte[] key) {
@@ -45,7 +47,7 @@ public final class Secret implements Externalizable, Serializable {
     }
 
     public final SecretKeySpec keySpecification() {
-        return keySpec;
+        return new SecretKeySpec(copyOf(key, key.length), "AES");
     }
 
     // See RFC 4648 Table 1.
