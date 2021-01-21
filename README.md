@@ -2,15 +2,16 @@
 This library allows you to create an AES service with following modes
 - Galois/Counter Mode (GCM)
 
-### Example of how to create AES with GCM
-Instantiate an AES service with a secret and additional authentication data
+### Example usage – AES with GCM
+Instantiate an AES service with a secret
 ```
-final var aes = AESFactory.aesGCM(new Secret(<secret as bytes>), new AAD("some aad data"));
+final var aes = AESFactory.aesGCM(new Secret(<secret as bytes>));
 ```
 
 Encrypt your plain text by
 ```
-final var result = aes.encrypt(plainText);
+final var aad = new AAD("some aad data");
+final var result = aes.encrypt(plainText, aad);
 ```
 
 The `result` object requires you to take the following actions
