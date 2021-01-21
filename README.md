@@ -2,6 +2,10 @@
 This library allows you to create an AES service with following modes
 - Galois/Counter Mode (GCM)
 
+### Known Limitations
+- The buffer load size in GCM is fixed to 16 KB when decrypting input streams. This is efficient on most
+  systems, but it might need to be variable. Buffer size will become configurable in future releases.
+
 ### Example usage – AES with GCM
 Instantiate an AES service with a secret
 ```
@@ -35,7 +39,3 @@ aes.decrypt(encrypted, aad)
               .reject(value -> <actions if decryption was rejected> ))
       .or(failure -> <actions if the decryption failed> );
 ```
-
-### Known Limitations
-- The buffer load size in GCM is fixed to 16 KB when decrypting input streams. This is efficient on most 
-  systems, but it might need to be variable. Buffer size will become configurable in future releases.
