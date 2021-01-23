@@ -1,4 +1,4 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.modes.cipher;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,10 +9,10 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
-import static se.deogun.aes.modes.SecretKeyFactory.secretKey;
-import static se.deogun.aes.modes.Secret.secret;
-import static se.deogun.aes.modes.Secret.secretFromBase64EncodedKey;
+import static se.deogun.aes.modes.cipher.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.cipher.SecretKeyFactory.secretKey;
+import static se.deogun.aes.modes.cipher.Secret.secret;
+import static se.deogun.aes.modes.cipher.Secret.secretFromBase64EncodedKey;
 
 class SecretTest {
     static final byte[] BASE64_ENCODED_SECRET_KEY_1 = secretKey();

@@ -2,7 +2,7 @@ package se.deogun.aes;
 
 import se.deogun.aes.modes.AESRejectReason;
 import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.AAD;
+import se.deogun.aes.modes.cipher.AAD;
 
 import java.io.InputStream;
 import java.io.OutputStream;

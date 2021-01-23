@@ -1,6 +1,7 @@
-package se.deogun.aes.modes.gcm;
+package se.deogun.aes.modes;
 
-import se.deogun.aes.modes.*;
+import se.deogun.aes.modes.cipher.AAD;
+import se.deogun.aes.modes.cipher.Secret;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
@@ -15,10 +16,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static se.deogun.aes.modes.AESRejectReason.*;
+import static se.deogun.aes.modes.InternalValidation.isNotNull;
 import static se.deogun.aes.modes.Result.accept;
 import static se.deogun.aes.modes.Result.reject;
 
-public final class GCM {
+final class GCM implements Mode {
     private static final int START_INDEX_OF_ENCRYPTED_DATA = 12;
     private static final int TAG_LENGTH_IN_BITS = 128;
     private static final int START_INDEX_OF_IV = 0;
@@ -32,10 +34,10 @@ public final class GCM {
 
     public final Result<Throwable, OutputStream, AESRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
                                                                           final Secret secret, final AAD aad) {
-        notNull(plainText);
-        notNull(outputStream);
-        notNull(secret);
-        notNull(aad);
+        isNotNull(plainText);
+        isNotNull(outputStream);
+        isNotNull(secret);
+        isNotNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -65,9 +67,9 @@ public final class GCM {
     }
 
     public final Result<Throwable, byte[], AESRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
-        notNull(plainText);
-        notNull(secret);
-        notNull(aad);
+        isNotNull(plainText);
+        isNotNull(secret);
+        isNotNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -94,9 +96,9 @@ public final class GCM {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public final Result<Throwable, byte[], AESRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
-        notNull(inputStream);
-        notNull(secret);
-        notNull(aad);
+        isNotNull(inputStream);
+        isNotNull(secret);
+        isNotNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -125,9 +127,9 @@ public final class GCM {
     }
 
     public final Result<Throwable, byte[], AESRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
-        notNull(encryptedData);
-        notNull(secret);
-        notNull(aad);
+        isNotNull(encryptedData);
+        isNotNull(secret);
+        isNotNull(aad);
 
         try {
             final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -175,11 +177,5 @@ public final class GCM {
         byteBuffer.put(iv);
         byteBuffer.put(encrypted);
         return byteBuffer.array();
-    }
-
-    private static void notNull(final Object input) {
-        if (input == null) {
-            throw new InternalValidationFailure();
-        }
     }
 }

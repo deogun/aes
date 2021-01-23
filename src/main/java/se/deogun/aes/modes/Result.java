@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
+import static se.deogun.aes.modes.InternalValidation.satisfiesInvariant;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TYPE> {
@@ -105,9 +106,9 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
     public <T> T transform(final Function<ACCEPT_TYPE, T> acceptTransformer,
                            final Function<REJECT_TYPE, T> rejectTransformer,
                            final Function<FAILURE_TYPE, T> failureTransformer) {
-        isNotNull(acceptTransformer);
-        isNotNull(rejectTransformer);
-        isNotNull(failureTransformer);
+        notNull(acceptTransformer);
+        notNull(rejectTransformer);
+        notNull(failureTransformer);
 
         return success
                 .map(value -> value.accept
@@ -188,13 +189,7 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
         }
     }
 
-    private static void satisfiesInvariant(final boolean invariant) {
-        if (!invariant) {
-            throw new InternalValidationFailure();
-        }
-    }
-
-    private static void isNotNull(final Object input) {
+    private static void notNull(final Object input) {
         if (input == null) {
             throw new IllegalArgumentException("Null not allowed as input");
         }

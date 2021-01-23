@@ -1,11 +1,8 @@
 package se.deogun.aes;
 
-import se.deogun.aes.modes.AESRejectReason;
-import se.deogun.aes.modes.InternalValidationFailure;
-import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.AAD;
-import se.deogun.aes.modes.gcm.GCM;
-import se.deogun.aes.modes.Secret;
+import se.deogun.aes.modes.*;
+import se.deogun.aes.modes.cipher.AAD;
+import se.deogun.aes.modes.cipher.Secret;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,40 +18,47 @@ public final class AESFactory {
     /**
      * Creates an AES instance with GCM mode
      *
-     * @param secret secret key
+     * @param secret secret to be used for encryption / decryption
      * @return AES GCM service
      */
     public static AES aesGCM(final Secret secret) {
         notNull(secret);
+        return ModeFactory.gcm(mode -> aes(secret, mode));
+    }
 
+    private static AES aes(final Secret secret, final Mode mode) {
         return new AES() {
             @Override
-            public Result<? super AESFailure, byte[], AESRejectReason> encrypt(final byte[] plain, final AAD aad) {
-                notNull(plain);
+            public Result<? super AESFailure, byte[], AESRejectReason> encrypt(final byte[] data, final AAD aad) {
+                notNull(data);
                 notNull(aad);
-                return apply(() -> new GCM().encrypt(plain, secret, aad));
+
+                return apply(() -> mode.encrypt(data, secret, aad));
             }
 
             @Override
-            public Result<? super AESFailure, OutputStream, AESRejectReason> encrypt(final byte[] plain, final OutputStream outputStream, final AAD aad) {
-                notNull(plain);
+            public Result<? super AESFailure, OutputStream, AESRejectReason> encrypt(final byte[] data, final OutputStream outputStream, final AAD aad) {
+                notNull(data);
                 notNull(outputStream);
                 notNull(aad);
-                return apply(() -> new GCM().encrypt(plain, outputStream, secret, aad));
+
+                return apply(() -> mode.encrypt(data, outputStream, secret, aad));
             }
 
             @Override
-            public Result<? super AESFailure, byte[], AESRejectReason> decrypt(final byte[] encrypted, final AAD aad) {
-                notNull(encrypted);
+            public Result<? super AESFailure, byte[], AESRejectReason> decrypt(final byte[] data, final AAD aad) {
+                notNull(data);
                 notNull(aad);
-                return apply(() -> new GCM().decrypt(encrypted, secret, aad));
+
+                return apply(() -> mode.decrypt(data, secret, aad));
             }
 
             @Override
             public Result<? super AESFailure, byte[], AESRejectReason> decrypt(final InputStream inputStream, final AAD aad) {
                 notNull(inputStream);
                 notNull(aad);
-                return apply(() -> new GCM().decrypt(inputStream, secret, aad));
+
+                return apply(() -> mode.decrypt(inputStream, secret, aad));
             }
         };
     }

@@ -1,7 +1,7 @@
 package se.deogun.aes;
 
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.modes.AAD;
+import se.deogun.aes.modes.cipher.AAD;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,8 +13,8 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.*;
 import static se.deogun.aes.AESFactory.aesGCM;
 import static se.deogun.aes.modes.AESRejectReason.UNABLE_TO_DECRYPT_DATA;
-import static se.deogun.aes.modes.Secret.secret;
-import static se.deogun.aes.modes.SecretKeyFactory.nonBase64EncodedKey;
+import static se.deogun.aes.modes.cipher.Secret.secret;
+import static se.deogun.aes.modes.cipher.SecretKeyFactory.nonBase64EncodedKey;
 
 class IntegrationTest {
     @Test

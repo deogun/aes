@@ -1,11 +1,10 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.modes.cipher;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,28 +19,28 @@ public final class Secret implements Externalizable, Serializable {
     private transient final byte[] key;
 
     private Secret(final byte[] key) {
-        isNotNull(key);
+        notNull(key);
         this.key = copyOf(key, key.length);
     }
 
     public static Secret secret(final byte[] key) {
-        isNotNull(key);
+        notNull(key);
         return new Secret(key);
     }
 
     public static Secret secret(final String key) {
-        isNotNull(key);
+        notNull(key);
         return new Secret(key.getBytes(UTF_8));
     }
 
     public static Secret secretFromBase64EncodedKey(final String key) {
-        isNotNull(key);
+        notNull(key);
         satisfiesInvariant(satisfiesBase64(key.getBytes(UTF_8)));
         return new Secret(Base64.getDecoder().decode(key.getBytes(UTF_8)));
     }
 
     public static Secret secretFromBase64EncodedKey(final byte[] key) {
-        isNotNull(key);
+        notNull(key);
         satisfiesInvariant(satisfiesBase64(key));
         return new Secret(Base64.getDecoder().decode(key));
     }
@@ -87,13 +86,7 @@ public final class Secret implements Externalizable, Serializable {
         return true;
     }
 
-    private static void isNotNull(final byte[] input) {
-        if (input == null) {
-            throw new InternalValidationFailure();
-        }
-    }
-
-    private static void isNotNull(final Object input) {
+    private static void notNull(final Object input) {
         if (input == null) {
             throw new IllegalArgumentException("Null not allowed as input");
         }
