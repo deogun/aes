@@ -15,8 +15,6 @@ import static se.deogun.aes.modes.cipher.Secret.secret;
 import static se.deogun.aes.modes.cipher.Secret.secretFromBase64EncodedKey;
 
 class SecretTest {
-    static final byte[] BASE64_ENCODED_SECRET_KEY_1 = secretKey();
-    static final byte[] BASE64_ENCODED_SECRET_KEY_2 = secretKey();
 
     @Test
     void should_support_non_base64_encoded_key() {
@@ -25,17 +23,17 @@ class SecretTest {
 
     @Test
     void should_accept_base64_encoded_key() {
-        assertDoesNotThrow(() -> secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_1));
+        assertDoesNotThrow(() -> secretFromBase64EncodedKey(secretKey()));
     }
 
     @Test
     void should_accept_base64_encoded_string_key() {
-        assertDoesNotThrow(() -> secretFromBase64EncodedKey(new String(BASE64_ENCODED_SECRET_KEY_1)));
+        assertDoesNotThrow(() -> secretFromBase64EncodedKey(new String(secretKey())));
     }
 
     @Test
     void should_not_allow_externalization() {
-        final var secret = secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_1);
+        final var secret = secretFromBase64EncodedKey(secretKey());
 
         assertThrows(UnsupportedOperationException.class, () -> secret.writeExternal(mock(ObjectOutput.class)));
         assertThrows(UnsupportedOperationException.class, () -> secret.readExternal(mock(ObjectInput.class)));
@@ -43,7 +41,7 @@ class SecretTest {
 
     @Test
     void should_not_print_value_in_toString() {
-        final var result = secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_1).toString();
+        final var result = secretFromBase64EncodedKey(secretKey()).toString();
 
         assertEquals("***** SENSITIVE VALUE *****", result);
     }
@@ -51,10 +49,10 @@ class SecretTest {
     @SuppressWarnings("ALL")
     @Test
     void should_not_respect_equals() {
-        final Secret secret = secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_1);
+        final Secret secret = secretFromBase64EncodedKey(secretKey());
 
         assertFalse(secret.equals(secret));
-        assertFalse(secret.equals(secretFromBase64EncodedKey(BASE64_ENCODED_SECRET_KEY_2)));
+        assertFalse(secret.equals(secretFromBase64EncodedKey(secretKey())));
     }
 
     @Test

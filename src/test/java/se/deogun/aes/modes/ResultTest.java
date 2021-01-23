@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static se.deogun.aes.modes.AESRejectReason.INVALID_GCM_TAG;
+import static se.deogun.aes.modes.AESRejectReason.GCM_INVALID_TAG;
 
 class ResultTest {
     static final RuntimeException EXCEPTION = new RuntimeException();
@@ -23,39 +23,27 @@ class ResultTest {
     void should_give_accepted_result() {
         Result.<RuntimeException, byte[], AESRejectReason>accept(DATA)
                 .handle(success -> success
-                        .accept(value -> eventPublisher.fire(value))
-                        .reject(reason -> eventPublisher.fire(reason)))
-                .or(failure -> eventPublisher.fire(failure.getMessage()));
-
-        verify(eventPublisher).fire(DATA);
-        verify(eventPublisher, never()).fire(any(AESRejectReason.class));
-        verify(eventPublisher, never()).fire(any(String.class));
+                        .accept(value -> assertTrue(Arrays.equals(DATA, value)))
+                        .reject(reason -> fail("unexpected reject: " + reason)))
+                .or(failure -> fail("unexpected failure: " + failure.getMessage()));
     }
 
     @Test
     void should_give_rejected_result() {
-        Result.<RuntimeException, byte[], AESRejectReason>reject(INVALID_GCM_TAG)
+        Result.<RuntimeException, byte[], AESRejectReason>reject(GCM_INVALID_TAG)
                 .handle(success -> success
-                        .accept(value -> eventPublisher.fire(value))
-                        .reject(reason -> eventPublisher.fire(reason)))
-                .or(failure -> eventPublisher.fire(failure.getMessage()));
-
-        verify(eventPublisher).fire(INVALID_GCM_TAG);
-        verify(eventPublisher, never()).fire(any(byte[].class));
-        verify(eventPublisher, never()).fire(any(String.class));
+                        .accept(value -> fail("unexpected accept: " + Arrays.toString(value)))
+                        .reject(reason -> assertEquals(GCM_INVALID_TAG, reason)))
+                .or(failure -> fail("unexpected failure: " + failure.getMessage()));
     }
 
     @Test
     void should_give_failed_result() {
         Result.<RuntimeException, byte[], AESRejectReason>failure(EXCEPTION)
                 .handle(success -> success
-                        .accept(value -> eventPublisher.fire(value))
-                        .reject(reason -> eventPublisher.fire(reason.name())))
-                .or(failure -> eventPublisher.fire(failure.getMessage()));
-
-        verify(eventPublisher, never()).fire(any(byte[].class));
-        verify(eventPublisher, never()).fire(AESRejectReason.class);
-        verify(eventPublisher).fire(EXCEPTION.getMessage());
+                        .accept(value -> fail("unexpected accept: " + Arrays.toString(value)))
+                        .reject(reason -> fail("unexpected reject: " + reason)))
+                .or(failure -> assertEquals(EXCEPTION, failure));
     }
 
     @Test
@@ -70,12 +58,12 @@ class ResultTest {
 
     @Test
     void should_lift_reject() {
-        final Result<RuntimeException, byte[], AESRejectReason> result = Result.reject(INVALID_GCM_TAG);
+        final Result<RuntimeException, byte[], AESRejectReason> result = Result.reject(GCM_INVALID_TAG);
 
         assertFalse(result.isAccept());
         assertTrue(result.isReject());
         assertFalse(result.isFailure());
-        assertEquals(INVALID_GCM_TAG, result.liftReject());
+        assertEquals(GCM_INVALID_TAG, result.liftReject());
     }
 
     @Test
@@ -101,7 +89,7 @@ class ResultTest {
 
     @Test
     void should_transform_reject() {
-        final var result = Result.reject(INVALID_GCM_TAG).transform(
+        final var result = Result.reject(GCM_INVALID_TAG).transform(
                 accept -> Result.<Throwable, String, Integer>accept("accept"),
                 reject -> Result.<Throwable, String, Integer>reject(42),
                 failure -> Result.<Throwable, String, Integer>failure(new SecurityException())

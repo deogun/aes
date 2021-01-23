@@ -66,15 +66,15 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
     }
 
     public boolean isAccept() {
-        return success.isPresent() &&
-                success.map(value -> value.accept.isPresent())
-                        .orElse(false);
+        return success
+                .map(value -> value.accept.isPresent())
+                .orElse(false);
     }
 
     public boolean isReject() {
-        return success.isPresent() &&
-                success.map(value -> value.reject.isPresent())
-                        .orElse(false);
+        return success
+                .map(value -> value.reject.isPresent())
+                .orElse(false);
     }
 
     public boolean isFailure() {
@@ -103,21 +103,21 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
                 .orElseThrow();
     }
 
-    public <T> T transform(final Function<ACCEPT_TYPE, T> acceptTransformer,
-                           final Function<REJECT_TYPE, T> rejectTransformer,
-                           final Function<FAILURE_TYPE, T> failureTransformer) {
-        notNull(acceptTransformer);
-        notNull(rejectTransformer);
-        notNull(failureTransformer);
+    public <T> T transform(final Function<ACCEPT_TYPE, T> acceptTransformation,
+                           final Function<REJECT_TYPE, T> rejectTransformation,
+                           final Function<FAILURE_TYPE, T> failureTransformation) {
+        notNull(acceptTransformation);
+        notNull(rejectTransformation);
+        notNull(failureTransformation);
 
         return success
                 .map(value -> value.accept
-                        .map(v -> acceptTransformer.apply(v.data))
+                        .map(v -> acceptTransformation.apply(v.data))
                         .orElseGet(() -> value.reject
-                                .map(v -> rejectTransformer.apply(v.data))
+                                .map(v -> rejectTransformation.apply(v.data))
                                 .orElseThrow()))
                 .orElseGet(() -> failure
-                        .map(throwable -> failureTransformer.apply(throwable.exception))
+                        .map(throwable -> failureTransformation.apply(throwable.exception))
                         .orElseThrow());
     }
 

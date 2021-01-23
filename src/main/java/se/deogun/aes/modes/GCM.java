@@ -58,11 +58,11 @@ final class GCM implements Mode {
         } catch (IOException | IllegalStateException e) {
             return reject(UNABLE_TO_ENCRYPT_DATA);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(AES_GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
+            return reject(GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
         } catch (InvalidKeyException e) {
-            return reject(INVALID_GCM_KEY);
+            return reject(GCM_INVALID_KEY);
         } catch (InvalidAlgorithmParameterException e) {
-            return reject(INVALID_GCM_PARAMETERS);
+            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
@@ -86,11 +86,11 @@ final class GCM implements Mode {
         } catch (IllegalStateException | BadPaddingException | IllegalBlockSizeException e) {
             return reject(UNABLE_TO_ENCRYPT_DATA);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(AES_GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
+            return reject(GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
         } catch (InvalidKeyException e) {
-            return reject(INVALID_GCM_KEY);
+            return reject(GCM_INVALID_KEY);
         } catch (InvalidAlgorithmParameterException e) {
-            return reject(INVALID_GCM_PARAMETERS);
+            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
@@ -118,11 +118,11 @@ final class GCM implements Mode {
         } catch (IOException | IllegalStateException e) {
             return reject(UNABLE_TO_DECRYPT_DATA);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(AES_GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
+            return reject(GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
         } catch (InvalidKeyException e) {
-            return reject(INVALID_GCM_KEY);
+            return reject(GCM_INVALID_KEY);
         } catch (InvalidAlgorithmParameterException e) {
-            return reject(INVALID_GCM_PARAMETERS);
+            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
@@ -143,11 +143,11 @@ final class GCM implements Mode {
         } catch (IllegalStateException | BadPaddingException | IllegalBlockSizeException e) {
             return reject(UNABLE_TO_DECRYPT_DATA);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(AES_GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
+            return reject(GCM_NOT_AVAILABLE_ON_THIS_SYSTEM);
         } catch (InvalidKeyException e) {
-            return reject(INVALID_GCM_KEY);
+            return reject(GCM_INVALID_KEY);
         } catch (InvalidAlgorithmParameterException e) {
-            return reject(INVALID_GCM_PARAMETERS);
+            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
