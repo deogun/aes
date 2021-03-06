@@ -1,8 +1,8 @@
-package se.deogun.aes.modes.cipher;
+package se.deogun.aes.modes.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.modes.cipher.AAD;
+import se.deogun.aes.modes.common.AAD;
 
 import java.util.Arrays;
 

@@ -1,11 +1,13 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.api;
+
+
+import se.deogun.aes.modes.common.InternalValidationFailure;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
-import static se.deogun.aes.modes.InternalValidation.satisfiesInvariant;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TYPE> {
@@ -24,10 +26,8 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
         this.failure = ofNullable(failure);
         this.success = ofNullable(success);
 
-        satisfiesInvariant(
-                this.success.isEmpty() && this.failure.isPresent() ||
-                        this.success.isPresent() && this.failure.isEmpty()
-        );
+        ensure(this.success.isEmpty() && this.failure.isPresent() ||
+                this.success.isPresent() && this.failure.isEmpty());
     }
 
     public static <F extends Throwable, A, R> Result<F, A, R> failure(final F exception) {
@@ -192,6 +192,12 @@ public final class Result<FAILURE_TYPE extends Throwable, ACCEPT_TYPE, REJECT_TY
     private static void notNull(final Object input) {
         if (input == null) {
             throw new IllegalArgumentException("Null not allowed as input");
+        }
+    }
+
+    static void ensure(final boolean invariant) {
+        if (!invariant) {
+            throw new se.deogun.aes.api.Failure(InternalValidationFailure.class);
         }
     }
 }

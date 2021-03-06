@@ -1,6 +1,5 @@
-package se.deogun.aes.modes.cipher;
+package se.deogun.aes.api;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -23,30 +22,30 @@ public final class Secret implements Externalizable, Serializable {
         this.key = copyOf(key, key.length);
     }
 
-    public static Secret secret(final byte[] key) {
+    public static Secret secretFromNonBase64EncodedKey(final byte[] key) {
         notNull(key);
         return new Secret(key);
     }
 
-    public static Secret secret(final String key) {
+    public static Secret secretFromNonBase64EncodedKey(final String key) {
         notNull(key);
         return new Secret(key.getBytes(UTF_8));
     }
 
     public static Secret secretFromBase64EncodedKey(final String key) {
         notNull(key);
-        satisfiesInvariant(satisfiesBase64(key.getBytes(UTF_8)));
+        satisfiesBase64Invariant(satisfiesBase64(key.getBytes(UTF_8)));
         return new Secret(Base64.getDecoder().decode(key.getBytes(UTF_8)));
     }
 
     public static Secret secretFromBase64EncodedKey(final byte[] key) {
         notNull(key);
-        satisfiesInvariant(satisfiesBase64(key));
+        satisfiesBase64Invariant(satisfiesBase64(key));
         return new Secret(Base64.getDecoder().decode(key));
     }
 
-    public final SecretKeySpec keySpecification() {
-        return new SecretKeySpec(copyOf(key, key.length), "AES");
+    public final byte[] key() {
+        return key.clone();
     }
 
     // See RFC 4648 Table 1.
@@ -88,13 +87,13 @@ public final class Secret implements Externalizable, Serializable {
 
     private static void notNull(final Object input) {
         if (input == null) {
-            throw new IllegalArgumentException("Null not allowed as input");
+            throw new IllegalArgumentException("Key cannot be null");
         }
     }
 
-    private static void satisfiesInvariant(final boolean invariant) {
+    private static void satisfiesBase64Invariant(final boolean invariant) {
         if (!invariant) {
-            throw new IllegalArgumentException("Input violates invariant");
+            throw new IllegalArgumentException("Input violates Base64 invariant");
         }
     }
 

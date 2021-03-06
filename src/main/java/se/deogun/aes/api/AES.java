@@ -1,8 +1,4 @@
-package se.deogun.aes;
-
-import se.deogun.aes.modes.AESRejectReason;
-import se.deogun.aes.modes.Result;
-import se.deogun.aes.modes.cipher.AAD;
+package se.deogun.aes.api;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +14,7 @@ public interface AES {
      * @param aad additional authentication data
      * @return result of the encrypt operation
      */
-    Result<? super AESFailure, byte[], AESRejectReason> encrypt(byte[] data, AAD aad);
+    Result<? super Failure, byte[], RejectReason> encrypt(byte[] data, AAD aad);
 
     /**
      * Encrypts the provided data using the mode defined when creating the AES instance
@@ -27,7 +23,7 @@ public interface AES {
      * @param aad additional authentication data
      * @return result of the encrypt operation
      */
-    Result<? super AESFailure, OutputStream, AESRejectReason> encrypt(byte[] data, OutputStream outputStream, AAD aad);
+    Result<? super Failure, OutputStream, RejectReason> encrypt(byte[] data, OutputStream outputStream, AAD aad);
 
     /**
      * Decrypts the provided data using the mode defined when creating the AES instance
@@ -35,7 +31,7 @@ public interface AES {
      * @param aad additional authentication data
      * @return result of the encrypt operation
      */
-    Result<? super AESFailure, byte[], AESRejectReason> decrypt(byte[] data, AAD aad);
+    Result<? super Failure, byte[], RejectReason> decrypt(byte[] data, AAD aad);
 
     /**
      * Decrypts the provided data using the mode defined when creating the AES instance
@@ -43,5 +39,5 @@ public interface AES {
      * @param aad additional authentication data
      * @return result of the decrypt operation
      */
-    Result<? super AESFailure, byte[], AESRejectReason> decrypt(InputStream inputStream, AAD aad);
+    Result<? super Failure, byte[], RejectReason> decrypt(InputStream inputStream, AAD aad);
 }

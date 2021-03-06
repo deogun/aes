@@ -1,13 +1,15 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.modes.common;
 
 import org.junit.jupiter.api.Test;
+import se.deogun.aes.modes.common.InternalRejectReason;
+import se.deogun.aes.modes.common.Result;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static se.deogun.aes.modes.AESRejectReason.GCM_INVALID_TAG;
+import static se.deogun.aes.modes.common.InternalRejectReason.GCM_INVALID_TAG;
 
 class ResultTest {
     static final RuntimeException EXCEPTION = new RuntimeException();
@@ -21,7 +23,7 @@ class ResultTest {
 
     @Test
     void should_give_accepted_result() {
-        Result.<RuntimeException, byte[], AESRejectReason>accept(DATA)
+        Result.<RuntimeException, byte[], InternalRejectReason>accept(DATA)
                 .handle(success -> success
                         .accept(value -> assertTrue(Arrays.equals(DATA, value)))
                         .reject(reason -> fail("unexpected reject: " + reason)))
@@ -30,7 +32,7 @@ class ResultTest {
 
     @Test
     void should_give_rejected_result() {
-        Result.<RuntimeException, byte[], AESRejectReason>reject(GCM_INVALID_TAG)
+        Result.<RuntimeException, byte[], InternalRejectReason>reject(GCM_INVALID_TAG)
                 .handle(success -> success
                         .accept(value -> fail("unexpected accept: " + Arrays.toString(value)))
                         .reject(reason -> assertEquals(GCM_INVALID_TAG, reason)))
@@ -39,7 +41,7 @@ class ResultTest {
 
     @Test
     void should_give_failed_result() {
-        Result.<RuntimeException, byte[], AESRejectReason>failure(EXCEPTION)
+        Result.<RuntimeException, byte[], InternalRejectReason>failure(EXCEPTION)
                 .handle(success -> success
                         .accept(value -> fail("unexpected accept: " + Arrays.toString(value)))
                         .reject(reason -> fail("unexpected reject: " + reason)))
@@ -48,7 +50,7 @@ class ResultTest {
 
     @Test
     void should_lift_accept() {
-        final Result<RuntimeException, byte[], AESRejectReason> result = Result.accept(DATA);
+        final Result<RuntimeException, byte[], InternalRejectReason> result = Result.accept(DATA);
 
         assertTrue(result.isAccept());
         assertFalse(result.isReject());
@@ -58,7 +60,7 @@ class ResultTest {
 
     @Test
     void should_lift_reject() {
-        final Result<RuntimeException, byte[], AESRejectReason> result = Result.reject(GCM_INVALID_TAG);
+        final Result<RuntimeException, byte[], InternalRejectReason> result = Result.reject(GCM_INVALID_TAG);
 
         assertFalse(result.isAccept());
         assertTrue(result.isReject());
@@ -68,7 +70,7 @@ class ResultTest {
 
     @Test
     void should_lift_failure() {
-        final Result<RuntimeException, byte[], AESRejectReason> result = Result.failure(EXCEPTION);
+        final Result<RuntimeException, byte[], InternalRejectReason> result = Result.failure(EXCEPTION);
 
         assertFalse(result.isAccept());
         assertFalse(result.isReject());

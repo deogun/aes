@@ -1,6 +1,6 @@
-package se.deogun.aes.modes;
+package se.deogun.aes.api;
 
-public enum AESRejectReason {
+public enum RejectReason {
     NO_SECURE_RANDOM_ALGORITHM_AVAILABLE_ON_THIS_SYSTEM,
     UNABLE_TO_DECRYPT_DATA,
     UNABLE_TO_ENCRYPT_DATA,

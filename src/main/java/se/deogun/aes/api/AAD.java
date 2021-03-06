@@ -1,20 +1,13 @@
-package se.deogun.aes.modes.cipher;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.copyOf;
+package se.deogun.aes.api;
 
 public final class AAD {
-    private final transient byte[] value;
+    public final transient String value;
 
     public AAD(final String value) {
         isValid(value);
         satisfiesUpperBound(value.getBytes().length < 8193); //Just to have an upper bound
 
-        this.value = value.getBytes(UTF_8);
-    }
-
-    public final byte[] value() {
-        return copyOf(value, value.length);
+        this.value = value;
     }
 
     private static void isValid(final String input) {

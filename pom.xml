@@ -6,7 +6,7 @@
 
     <groupId>se.deogun</groupId>
     <artifactId>aes</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <description>AES library for encrypting and decrypting data</description>
     <url>https://github.com/deogun/aes</url>
 
@@ -22,9 +22,9 @@
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.apache.commons.commons-lang3>3.11</org.apache.commons.commons-lang3>
-        <org.junit.jupiter.junit-jupiter-engine>5.7.0</org.junit.jupiter.junit-jupiter-engine>
-        <org.mockito.mockito-junit-jupiter>3.7.7</org.mockito.mockito-junit-jupiter>
+        <org.apache.commons.commons-lang3>3.12</org.apache.commons.commons-lang3>
+        <org.junit.jupiter.junit-jupiter-engine>5.8.0-M1</org.junit.jupiter.junit-jupiter-engine>
+        <org.mockito.mockito-junit-jupiter>3.8.0</org.mockito.mockito-junit-jupiter>
     </properties>
 
 
