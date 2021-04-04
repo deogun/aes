@@ -3,9 +3,11 @@ package se.deogun.aes;
 import org.junit.jupiter.api.Test;
 import se.deogun.aes.api.AAD;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -77,5 +79,20 @@ class IntegrationTest {
                         .accept(value -> fail("unexpected successful decryption"))
                         .reject(value -> assertEquals(UNABLE_TO_DECRYPT_DATA, value)))
                 .or(failure -> fail("unexpected exception"));
+    }
+
+    @Test
+    void should_use_stored_secret_to_encrypt_decrypt() throws IOException {
+        final var storedSecret = Files.readAllBytes(Paths.get("src","test","resources", "secret.b64enc"));
+        final var aad = new AAD(randomAlphanumeric(8192));
+        final var secret = secretFromBase64EncodedKey(storedSecret);
+        final var aes = AESFactory.aesGCM(secret);
+        final var secretMessage = "This is my secret message";
+
+        final var encryptedMessage = aes.encrypt(secretMessage.getBytes(UTF_8), aad).liftAccept();
+        assertNotEquals(secretMessage, new String(encryptedMessage));
+
+        final var decryptedMessage = aes.decrypt(encryptedMessage, aad).liftAccept();
+        assertEquals(secretMessage, new String(decryptedMessage));
     }
 }
