@@ -6,6 +6,7 @@ import se.deogun.aes.modes.common.Secret;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static java.nio.charset.StandardCharsets.UTF_8;

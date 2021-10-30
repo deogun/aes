@@ -1,9 +1,6 @@
 package se.deogun.aes.modes;
 
-import se.deogun.aes.modes.common.AAD;
-import se.deogun.aes.modes.common.InternalRejectReason;
-import se.deogun.aes.modes.common.Result;
-import se.deogun.aes.modes.common.Secret;
+import se.deogun.aes.modes.common.*;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
@@ -17,12 +14,12 @@ import java.security.SecureRandom;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.InternalValidation.isNotNull;
+import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.common.Result.accept;
 import static se.deogun.aes.modes.common.Result.reject;
 
-final class GCM implements Mode {
+final class GCM implements AADMode {
     private static final int START_INDEX_OF_ENCRYPTED_DATA = 12;
     private static final int TAG_LENGTH_IN_BITS = 128;
     private static final int START_INDEX_OF_IV = 0;
@@ -30,9 +27,6 @@ final class GCM implements Mode {
     private static final int IV_NUMBER_OF_BYTES = 12;
     private static final int _16KB = 16 * 1024;
     private static final int END_OF_STREAM = -1;
-
-    static final class UnableToCreateSecureRandom extends Exception {
-    }
 
     public final Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
                                                                                final Secret secret, final AAD aad) {

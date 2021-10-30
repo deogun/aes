@@ -4,7 +4,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.copyOf;
 
 public final class AAD {
+    public static final AAD NO_AAD = new AAD();
     private final transient byte[] value;
+
+    private AAD() {
+        this.value = new byte[]{};
+    }
 
     public AAD(final String value) {
         isValid(value);

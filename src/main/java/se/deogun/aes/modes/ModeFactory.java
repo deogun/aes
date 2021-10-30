@@ -9,8 +9,13 @@ import static se.deogun.aes.modes.InternalValidation.isNotNull;
  * be used with AES
  */
 public final class ModeFactory {
-    public static <T>T gcm(final Function<Mode, T> aes) {
+    public static <T>T gcm(final Function<AADMode, T> aes) {
         isNotNull(aes);
         return aes.apply(new GCM());
+    }
+
+    public static <T>T cbc(final Function<NonAADMode, T> aes) {
+        isNotNull(aes);
+        return aes.apply(new CBC());
     }
 }
