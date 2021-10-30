@@ -67,14 +67,28 @@ class IntegrationTest {
     }
 
     @Test
-    void should_fail_decryption() {
+    void should_fail_to_decrypt_because_of_wrong_AAD() {
         final var aad = new AAD(randomAlphanumeric(8192));
         final var aes = AESFactory.aesGCM(secretFromBase64EncodedKey(base64EncodedKey()));
-        final var data = randomAlphanumeric(100000).getBytes(UTF_8);
 
-        final var encrypted = aes.encrypt(data, aad).liftAccept();
+        final var encrypted = aes.encrypt(randomAlphanumeric(100000).getBytes(UTF_8), aad).liftAccept();
 
         aes.decrypt(encrypted, new AAD(randomAlphabetic(10)))
+                .handle(success -> success
+                        .accept(value -> fail("unexpected successful decryption"))
+                        .reject(value -> assertEquals(UNABLE_TO_DECRYPT_DATA, value)))
+                .or(failure -> fail("unexpected exception"));
+    }
+
+    @Test
+    void should_fail_to_decrypt_because_of_wrong_secret() {
+        final var aad = new AAD(randomAlphanumeric(8192));
+        final var aes1 = AESFactory.aesGCM(secretFromBase64EncodedKey(base64EncodedKey()));
+        final var aes2 = AESFactory.aesGCM(secretFromBase64EncodedKey(base64EncodedKey()));
+
+        final var encrypted = aes1.encrypt(randomAlphanumeric(100000).getBytes(UTF_8), aad).liftAccept();
+
+        aes2.decrypt(encrypted, aad)
                 .handle(success -> success
                         .accept(value -> fail("unexpected successful decryption"))
                         .reject(value -> assertEquals(UNABLE_TO_DECRYPT_DATA, value)))
