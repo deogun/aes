@@ -1,8 +1,6 @@
 package se.deogun.aes.modes;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
-import se.deogun.aes.modes.common.AAD;
 import se.deogun.aes.modes.common.Secret;
 
 import java.util.Arrays;
@@ -10,7 +8,6 @@ import java.util.Arrays;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.*;
-import static se.deogun.aes.modes.common.AAD.NO_AAD;
 import static se.deogun.aes.modes.common.SecretKeyFactory.key;
 
 class CBCTest {

@@ -41,28 +41,16 @@ final class CBC implements NonAADMode {
             cipher.init(ENCRYPT_MODE, secret.keySpecification(), initVectorSpec);
             return accept(encryptedData(initVectorSpec.getIV(), cipher.doFinal(plainText)));
 
-            //TODO replace by rejects
-        } catch (NoSuchPaddingException e) { //Cipher.getInstance
-            e.printStackTrace();
-            return null;
-        } catch (NoSuchAlgorithmException e) { //Cipher.getInstance
-            e.printStackTrace();
-            return null;
-        } catch (UnableToCreateSecureRandom unableToCreateSecureRandom) { //IV
-            unableToCreateSecureRandom.printStackTrace();
-            return null;
-        } catch (InvalidAlgorithmParameterException e) { //cipher.init
-            e.printStackTrace();
-            return null;
-        } catch (InvalidKeyException e) { //cipher.init
-            e.printStackTrace();
-            return null;
-        } catch (IllegalBlockSizeException e) { //cipher.doFinal
-            e.printStackTrace();
-            return null;
-        } catch (BadPaddingException e) { //cipher.doFinal
-            e.printStackTrace();
-            return null;
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+            return reject(CBC_NOT_AVAILABLE);
+        } catch (InvalidAlgorithmParameterException e) {
+            return reject(CBC_INVALID_PARAMETERS);
+        } catch (InvalidKeyException e) {
+            return reject(CBC_INVALID_KEY);
+        } catch (IllegalStateException | IllegalBlockSizeException | BadPaddingException e) {
+            return reject(UNABLE_TO_ENCRYPT);
+        } catch (UnableToCreateSecureRandom unableToCreateSecureRandom) {
+            return reject(NO_SECURE_RANDOM_ALGORITHM);
         }
     }
 
@@ -78,15 +66,14 @@ final class CBC implements NonAADMode {
 
             return accept(cipher.doFinal(encryptedData, START_INDEX_OF_ENCRYPTED_DATA, encryptedData.length - IV_NUMBER_OF_BYTES));
 
-            //TODO verify that all exceptions are thrown
-        } catch (IllegalStateException | BadPaddingException | IllegalBlockSizeException e) {
-            return reject(UNABLE_TO_DECRYPT);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(CBC_NOT_AVAILABLE);
-        } catch (InvalidKeyException e) {
-            return reject(CBC_INVALID_KEY);
         } catch (InvalidAlgorithmParameterException e) {
             return reject(CBC_INVALID_PARAMETERS);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+            return reject(CBC_NOT_AVAILABLE);
+        } catch (IllegalStateException | IllegalBlockSizeException | BadPaddingException e) {
+            return reject(UNABLE_TO_DECRYPT);
+        } catch (InvalidKeyException e) {
+            return reject(CBC_INVALID_KEY);
         }
     }
 
