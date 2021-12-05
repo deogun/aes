@@ -28,7 +28,7 @@ final class GCM implements AADMode {
     private static final int _16KB = 16 * 1024;
     private static final int END_OF_STREAM = -1;
 
-    public final Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
+    public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
                                                                                final Secret secret, final AAD aad) {
         isNotNull(plainText);
         isNotNull(outputStream);
@@ -62,7 +62,7 @@ final class GCM implements AADMode {
         }
     }
 
-    public final Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
+    public Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
         isNotNull(plainText);
         isNotNull(secret);
         isNotNull(aad);
@@ -91,7 +91,7 @@ final class GCM implements AADMode {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public final Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
+    public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
         isNotNull(inputStream);
         isNotNull(secret);
         isNotNull(aad);
@@ -122,7 +122,7 @@ final class GCM implements AADMode {
         }
     }
 
-    public final Result<Throwable, byte[], InternalRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
+    public Result<Throwable, byte[], InternalRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
         isNotNull(encryptedData);
         isNotNull(secret);
         isNotNull(aad);
