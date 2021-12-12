@@ -51,14 +51,13 @@ class CBCIntegrationTest {
         assertArrayEquals(decrypted1, decrypted2);
     }
 
-    @Disabled
     @Test
     void should_support_streams() {
         final var data = randomAlphabetic(100000).getBytes(UTF_8);
         final var outputStream = new ByteArrayOutputStream();
         final var secret = secretFromBase64EncodedKey(base64EncodedKey());
 
-        cbc(secret).encrypt(data, outputStream).liftAccept();
+        cbc(secret).encrypt(data, outputStream);
         final var result = cbc(secret).decrypt(new ByteArrayInputStream(outputStream.toByteArray())).liftAccept();
 
         assertArrayEquals(data, result);

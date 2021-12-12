@@ -1,6 +1,5 @@
 package se.deogun.aes.modes;
 
-import se.deogun.aes.modes.common.AAD;
 import se.deogun.aes.modes.common.InternalRejectReason;
 import se.deogun.aes.modes.common.Result;
 import se.deogun.aes.modes.common.Secret;

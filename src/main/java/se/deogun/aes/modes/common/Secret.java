@@ -16,7 +16,7 @@ public final class Secret implements Externalizable, Serializable {
         this.key = clone(key);
     }
 
-    public final SecretKeySpec keySpecification() {
+    public SecretKeySpec keySpecification() {
         return new SecretKeySpec(clone(key), "AES");
     }
 

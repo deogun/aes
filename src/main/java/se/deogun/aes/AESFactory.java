@@ -52,7 +52,9 @@ public final class AESFactory {
 
             @Override
             public Result<? super Failure, OutputStream, RejectReason> encrypt(final byte[] data, final OutputStream outputStream) {
-                return null; //TODO Add implementation
+                notNull(data, "Encryption data");
+                notNull(outputStream, "OutputStream");
+                return apply(() -> mode.encrypt(data, outputStream, secret(secret)));
             }
 
             @Override
@@ -63,7 +65,8 @@ public final class AESFactory {
 
             @Override
             public Result<? super Failure, byte[], RejectReason> decrypt(final InputStream inputStream) {
-                return null; //TODO Add implementation
+                notNull(inputStream, "Decryption data");
+                return apply(() -> mode.decrypt(inputStream, secret(secret)));
             }
 
             @Override

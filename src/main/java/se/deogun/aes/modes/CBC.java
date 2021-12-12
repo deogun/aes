@@ -10,6 +10,8 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -20,6 +22,7 @@ import java.security.SecureRandom;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
+import static se.deogun.aes.api.Result.failure;
 import static se.deogun.aes.modes.InternalValidation.isNotNull;
 import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.common.Result.accept;
@@ -28,6 +31,8 @@ import static se.deogun.aes.modes.common.Result.reject;
 final class CBC implements NonAADMode {
     private static final int IV_NUMBER_OF_BYTES = 16;
     private static final int START_INDEX_OF_ENCRYPTED_DATA = 16;
+    private static final int _16KB = 16 * 1024;
+    private static final int END_OF_STREAM = -1;
 
     @Override
     public Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret) {
@@ -60,7 +65,7 @@ final class CBC implements NonAADMode {
         isNotNull(secret);
 
         try {
-            final var cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            final var cipher = cbc();
             final var iv = initVectorSpec(encryptedData);
             cipher.init(DECRYPT_MODE, secret.keySpecification(), iv);
 
@@ -78,13 +83,49 @@ final class CBC implements NonAADMode {
     }
 
     @Override
-    public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream, final Secret secret) {
-        return null; //TODO Add implementation
+    public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText,
+                                                                         final OutputStream outputStream,
+                                                                         final Secret secret) {
+        isNotNull(plainText);
+        isNotNull(outputStream);
+        isNotNull(secret);
+
+        try {
+            final var encrypted = encrypt(plainText, secret);
+            if (encrypted.isAccept()) {
+                outputStream.write(encrypted.liftAccept());
+            }
+            return encrypted.transform(
+                    accept -> accept(outputStream),
+                    reject -> reject(reject),
+                    failure -> Result.failure(failure)
+            );
+        } catch (IOException e) {
+            return reject(UNABLE_TO_ENCRYPT);
+        }
     }
 
     @Override
     public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream encryptedData, final Secret secret) {
-        return null; //TODO Add implementation
+        isNotNull(encryptedData);
+        isNotNull(secret);
+
+        try {
+            return decrypt(toBytes(encryptedData), secret);
+        } catch (IOException e) {
+            return reject(UNABLE_TO_DECRYPT);
+        }
+    }
+
+    private byte[] toBytes(final InputStream stream) throws IOException {
+        final var buffer = new ByteArrayOutputStream();
+        final var data = new byte[_16KB];
+        int read;
+
+        while ((read = stream.read(data, 0, data.length)) != END_OF_STREAM) {
+            buffer.write(data, 0, read);
+        }
+        return buffer.toByteArray();
     }
 
     private Cipher cbc() throws NoSuchAlgorithmException, NoSuchPaddingException {
