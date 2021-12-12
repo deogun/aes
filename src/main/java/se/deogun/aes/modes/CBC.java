@@ -22,7 +22,6 @@ import java.security.SecureRandom;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static se.deogun.aes.api.Result.failure;
 import static se.deogun.aes.modes.InternalValidation.isNotNull;
 import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.common.Result.accept;

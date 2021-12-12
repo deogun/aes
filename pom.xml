@@ -6,7 +6,7 @@
 
     <groupId>se.deogun</groupId>
     <artifactId>aes</artifactId>
-    <version>3.1.2</version>
+    <version>4.0.0</version>
     <description>AES library for encrypting and decrypting data</description>
     <url>https://github.com/deogun/aes</url>
 
