@@ -2,16 +2,21 @@ package se.deogun.aes.modes;
 
 import se.deogun.aes.modes.common.*;
 
-import javax.crypto.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static se.deogun.aes.modes.InternalValidation.isNotNull;
@@ -29,36 +34,24 @@ final class GCM implements AADMode {
     private static final int END_OF_STREAM = -1;
 
     public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
-                                                                               final Secret secret, final AAD aad) {
+                                                                         final Secret secret, final AAD aad) {
         isNotNull(plainText);
         isNotNull(outputStream);
         isNotNull(secret);
         isNotNull(aad);
 
         try {
-            final var cipher = gcm();
-            final byte[] initVector = initVector();
-            final var gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_IN_BITS, initVector);
-
-            cipher.init(ENCRYPT_MODE, secret.keySpecification(), gcmParameterSpec);
-            cipher.updateAAD(aad.value());
-
-            try (var cos = new CipherOutputStream(outputStream, cipher)) {
-                outputStream.write(initVector);
-                cos.write(plainText);
+            final var encrypted = encrypt(plainText, secret, aad);
+            if (encrypted.isAccept()) {
+                outputStream.write(encrypted.liftAccept());
             }
-            return accept(outputStream);
-
-        } catch (UnableToCreateSecureRandom e) {
-            return reject(NO_SECURE_RANDOM_ALGORITHM);
-        } catch (IOException | IllegalStateException e) {
+            return encrypted.transform(
+                    accept -> accept(outputStream),
+                    reject -> reject(reject),
+                    failure -> Result.failure(failure)
+            );
+        } catch (IOException e) {
             return reject(UNABLE_TO_ENCRYPT);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(GCM_NOT_AVAILABLE);
-        } catch (InvalidKeyException e) {
-            return reject(GCM_INVALID_KEY);
-        } catch (InvalidAlgorithmParameterException e) {
-            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
@@ -91,34 +84,15 @@ final class GCM implements AADMode {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
-        isNotNull(inputStream);
+    public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream encryptedData, final Secret secret, final AAD aad) {
+        isNotNull(encryptedData);
         isNotNull(secret);
         isNotNull(aad);
 
         try {
-            final var cipher = gcm();
-            final var iv = new byte[IV_NUMBER_OF_BYTES];
-            inputStream.read(iv);
-            final var gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_IN_BITS, iv);
-
-            cipher.init(DECRYPT_MODE, secret.keySpecification(), gcmParameterSpec);
-            cipher.updateAAD(aad.value());
-
-            try (final var cipherInputStream = new CipherInputStream(inputStream, cipher);
-                 final var inputReader = new InputStreamReader(cipherInputStream, UTF_8);
-                 final var encryptedData = new BufferedReader(inputReader)
-            ) {
-                return accept(decrypt(encryptedData));
-            }
-        } catch (IOException | IllegalStateException e) {
+            return decrypt(toBytes(encryptedData), secret, aad);
+        } catch (IOException e) {
             return reject(UNABLE_TO_DECRYPT);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            return reject(GCM_NOT_AVAILABLE);
-        } catch (InvalidKeyException e) {
-            return reject(GCM_INVALID_KEY);
-        } catch (InvalidAlgorithmParameterException e) {
-            return reject(GCM_INVALID_PARAMETERS);
         }
     }
 
@@ -151,15 +125,15 @@ final class GCM implements AADMode {
         return Cipher.getInstance("AES/GCM/NoPadding");
     }
 
-    private byte[] decrypt(final BufferedReader reader) throws IOException {
-        final var buffer = new char[_16KB];
-        final var builder = new StringBuilder();
-        int numberOfCharacters;
+    private byte[] toBytes(final InputStream stream) throws IOException {
+        final var buffer = new ByteArrayOutputStream();
+        final var data = new byte[_16KB];
+        int read;
 
-        while ((numberOfCharacters = reader.read(buffer, 0, buffer.length)) != END_OF_STREAM) {
-            builder.append(buffer, 0, numberOfCharacters);
+        while ((read = stream.read(data, 0, data.length)) != END_OF_STREAM) {
+            buffer.write(data, 0, read);
         }
-        return builder.toString().getBytes(UTF_8);
+        return buffer.toByteArray();
     }
 
     private byte[] initVector() throws UnableToCreateSecureRandom {
