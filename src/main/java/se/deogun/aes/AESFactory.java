@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static se.deogun.aes.api.DecryptBufferSize._16KB_DECRYPT_BUFFER_SIZE;
 import static se.deogun.aes.api.RejectReason.ALGORITHM_NOT_SUPPORTING_AAD;
 import static se.deogun.aes.api.Result.reject;
 import static se.deogun.aes.modes.ModeFactory.cbc;
@@ -21,25 +22,48 @@ import static se.deogun.aes.modes.common.AAD.NO_AAD;
  */
 public final class AESFactory {
     /**
-     * Creates an AES instance with GCM mode
+     * Creates an AES instance with GCM mode and 16KB decrypt buffer size
      *
      * @param secret secret to be used for encryption / decryption
      * @return AES service
      */
     public static AES aesGCM(final Secret secret) {
-        notNull(secret, "Secret");
-        return gcm(mode -> aesSupportingAAD(secret, mode));
+        return aesGCM(secret, _16KB_DECRYPT_BUFFER_SIZE);
     }
 
     /**
-     * Creates an AES instance with CBC mode
+     * Creates an AES instance with GCM mode
+     *
+     * @param secret secret to be used for encryption / decryption
+     * @return AES service
+     */
+    public static AES aesGCM(final Secret secret, final DecryptBufferSize decryptBufferSize) {
+        notNull(secret, "Secret");
+        notNull(decryptBufferSize, "Decrypt buffer size");
+        return gcm(mode -> aesSupportingAAD(secret, mode), decryptBufferSize.size);
+    }
+
+
+    /**
+     * Creates an AES instance with CBC mode and 16KB decrypt buffer size
      *
      * @param secret secret to be used for encryption / decryption
      * @return AES service
      */
     public static AES aesCBC(final Secret secret) {
+        return aesCBC(secret, _16KB_DECRYPT_BUFFER_SIZE);
+    }
+
+    /**
+     * Creates an AES instance with CBC mode and 16KB decrypt buffer size
+     *
+     * @param secret secret to be used for encryption / decryption
+     * @return AES service
+     */
+    public static AES aesCBC(final Secret secret, final DecryptBufferSize decryptBufferSize) {
         notNull(secret, "Secret");
-        return cbc(mode -> aesNotSupportingAAD(secret, mode));
+        notNull(decryptBufferSize, "Decrypt buffer size");
+        return cbc(mode -> aesNotSupportingAAD(secret, mode), decryptBufferSize.size);
     }
 
     private static AES aesNotSupportingAAD(final Secret secret, final NonAADMode mode) {

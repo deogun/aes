@@ -34,9 +34,9 @@ final class CBC implements NonAADMode {
     private final int decryptBufferLoadSize;
 
     CBC(final int decryptBufferLoadSize) {
-        isTrue(isInRange(decryptBufferLoadSize, 2, 1024));
+        isTrue(isInRange(decryptBufferLoadSize, 8 * 1024, 1024 * 1024));
 
-        this.decryptBufferLoadSize = decryptBufferLoadSize * 1024; //buffer size in KB
+        this.decryptBufferLoadSize = decryptBufferLoadSize;
     }
 
     @Override

@@ -22,12 +22,18 @@ import static se.deogun.aes.modes.common.SecretKeyFactory.key;
 
 public class EncryptDecryptTest {
     private static final Map<String, Proxy> ALGORITHMS = Map.of(
-            "GCM", new GCMProxy(16),
-            "CBC", new CBCProxy(16)
+            "GCM8", new GCMProxy(8 * 1024),
+            "CBC8", new CBCProxy(8 * 1024),
+            "GCM16", new GCMProxy(16 * 1024),
+            "CBC16", new CBCProxy(16 * 1024),
+            "GCM32", new GCMProxy(32 * 1024),
+            "CBC32", new CBCProxy(32 * 1024),
+            "GCM64", new GCMProxy(64 * 1024),
+            "CBC64", new CBCProxy(64 * 1024)
     );
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM", "CBC"})
+    @ValueSource(strings = {"GCM8", "CBC8", "GCM16", "CBC16", "GCM32", "CBC32", "GCM64", "CBC64"})
     public void should_encrypt_byte_array(final String type) {
         final var data = randomAlphabetic(100000);
         final var secret = new Secret(key());
@@ -38,7 +44,7 @@ public class EncryptDecryptTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM", "CBC"})
+    @ValueSource(strings = {"GCM8", "CBC8", "GCM16", "CBC16", "GCM32", "CBC32", "GCM64", "CBC64"})
     public void should_decrypt_byte_array(final String type) {
         final var data = randomAlphabetic(100000);
         final var secret = new Secret(key());
@@ -56,7 +62,7 @@ public class EncryptDecryptTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM", "CBC"})
+    @ValueSource(strings = {"GCM8", "CBC8", "GCM16", "CBC16", "GCM32", "CBC32", "GCM64", "CBC64"})
     void should_support_encrypt_stream(final String type) {
         final var data = randomAlphabetic(100000);
         final var outputStream = new ByteArrayOutputStream();
@@ -68,7 +74,7 @@ public class EncryptDecryptTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM", "CBC"})
+    @ValueSource(strings = {"GCM8", "CBC8", "GCM16", "CBC16", "GCM32", "CBC32", "GCM64", "CBC64"})
     void should_support_decrypt_stream(final String type) {
         final var data = randomAlphabetic(100000);
         final var outputStream = new ByteArrayOutputStream();
