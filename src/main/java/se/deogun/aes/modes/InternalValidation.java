@@ -8,4 +8,14 @@ final class InternalValidation {
             throw new InternalValidationFailure();
         }
     }
+
+    static boolean isInRange(final int value, final int start, final int end) {
+        return value >= start && value <= end;
+    }
+
+    public static void isTrue(final boolean value) {
+        if(!value) {
+            throw new InternalValidationFailure();
+        }
+    }
 }
