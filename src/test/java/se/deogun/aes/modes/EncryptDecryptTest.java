@@ -56,7 +56,7 @@ public class EncryptDecryptTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM"})
+    @ValueSource(strings = {"GCM", "CBC"})
     void should_support_encrypt_stream(final String type) {
         final var data = randomAlphabetic(100000);
         final var outputStream = new ByteArrayOutputStream();
@@ -68,7 +68,7 @@ public class EncryptDecryptTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"GCM"})
+    @ValueSource(strings = {"GCM", "CBC"})
     void should_support_decrypt_stream(final String type) {
         final var data = randomAlphabetic(100000);
         final var outputStream = new ByteArrayOutputStream();
@@ -135,8 +135,7 @@ public class EncryptDecryptTest {
 
         @Override
         public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream, final Secret secret, final AAD aad) {
-            fail("not implemented yet");
-            return null;
+            return new CBC(decryptBufferLoadSize).encrypt(plainText, outputStream, secret);
         }
 
         public Result<Throwable, byte[], InternalRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
@@ -145,8 +144,7 @@ public class EncryptDecryptTest {
 
         @Override
         public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
-            fail("not implemented yet");
-            return null;
+            return new CBC(decryptBufferLoadSize).decrypt(inputStream, secret);
         }
     }
 }
