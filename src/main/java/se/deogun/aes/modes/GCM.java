@@ -19,7 +19,7 @@ import java.security.SecureRandom;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static se.deogun.aes.modes.InternalValidation.isNotNull;
+import static se.deogun.aes.modes.InternalValidation.*;
 import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.common.Result.accept;
 import static se.deogun.aes.modes.common.Result.reject;
@@ -30,8 +30,14 @@ final class GCM implements AADMode {
     private static final int START_INDEX_OF_IV = 0;
     private static final int NUMBER_OF_IV_BYTES = 12;
     private static final int IV_NUMBER_OF_BYTES = 12;
-    private static final int _16KB = 16 * 1024;
     private static final int END_OF_STREAM = -1;
+    private final int decryptBufferLoadSize;
+
+    GCM(final int decryptBufferLoadSize) {
+        isTrue(isInRange(decryptBufferLoadSize, 2, 1024));
+
+        this.decryptBufferLoadSize = decryptBufferLoadSize * 1024; //buffer size in KB
+    }
 
     public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream,
                                                                          final Secret secret, final AAD aad) {
@@ -127,7 +133,7 @@ final class GCM implements AADMode {
 
     private byte[] toBytes(final InputStream stream) throws IOException {
         final var buffer = new ByteArrayOutputStream();
-        final var data = new byte[_16KB];
+        final var data = new byte[decryptBufferLoadSize];
         int read;
 
         while ((read = stream.read(data, 0, data.length)) != END_OF_STREAM) {

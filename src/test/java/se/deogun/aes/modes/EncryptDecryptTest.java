@@ -22,8 +22,8 @@ import static se.deogun.aes.modes.common.SecretKeyFactory.key;
 
 public class EncryptDecryptTest {
     private static final Map<String, Proxy> ALGORITHMS = Map.of(
-            "GCM", new GCMProxy(),
-            "CBC", new CBCProxy()
+            "GCM", new GCMProxy(16),
+            "CBC", new CBCProxy(16)
     );
 
     @ParameterizedTest
@@ -95,30 +95,42 @@ public class EncryptDecryptTest {
     }
 
     private static final class GCMProxy implements Proxy {
+        private final int decryptBufferLoadSize;
+
+        private GCMProxy(final int decryptBufferLoadSize) {
+            this.decryptBufferLoadSize = decryptBufferLoadSize;
+        }
+
         @Override
         public Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
-            return new GCM().encrypt(plainText, secret, aad);
+            return new GCM(decryptBufferLoadSize).encrypt(plainText, secret, aad);
         }
 
         @Override
         public Result<Throwable, OutputStream, InternalRejectReason> encrypt(final byte[] plainText, final OutputStream outputStream, final Secret secret, final AAD aad) {
-            return new GCM().encrypt(plainText, outputStream, secret, aad);
+            return new GCM(decryptBufferLoadSize).encrypt(plainText, outputStream, secret, aad);
         }
 
         public Result<Throwable, byte[], InternalRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
-            return new GCM().decrypt(encryptedData, secret, aad);
+            return new GCM(decryptBufferLoadSize).decrypt(encryptedData, secret, aad);
         }
 
         @Override
         public Result<Throwable, byte[], InternalRejectReason> decrypt(final InputStream inputStream, final Secret secret, final AAD aad) {
-            return new GCM().decrypt(inputStream, secret, aad);
+            return new GCM(decryptBufferLoadSize).decrypt(inputStream, secret, aad);
         }
     }
 
     private static final class CBCProxy implements Proxy {
+        private final int decryptBufferLoadSize;
+
+        private CBCProxy(final int decryptBufferLoadSize) {
+            this.decryptBufferLoadSize = decryptBufferLoadSize;
+        }
+
         @Override
         public Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret, final AAD aad) {
-            return new CBC().encrypt(plainText, secret);
+            return new CBC(decryptBufferLoadSize).encrypt(plainText, secret);
         }
 
         @Override
@@ -128,7 +140,7 @@ public class EncryptDecryptTest {
         }
 
         public Result<Throwable, byte[], InternalRejectReason> decrypt(final byte[] encryptedData, final Secret secret, final AAD aad) {
-            return new CBC().decrypt(encryptedData, secret);
+            return new CBC(decryptBufferLoadSize).decrypt(encryptedData, secret);
         }
 
         @Override

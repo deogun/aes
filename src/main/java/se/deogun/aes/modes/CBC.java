@@ -22,7 +22,7 @@ import java.security.SecureRandom;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static se.deogun.aes.modes.InternalValidation.isNotNull;
+import static se.deogun.aes.modes.InternalValidation.*;
 import static se.deogun.aes.modes.common.InternalRejectReason.*;
 import static se.deogun.aes.modes.common.Result.accept;
 import static se.deogun.aes.modes.common.Result.reject;
@@ -30,8 +30,14 @@ import static se.deogun.aes.modes.common.Result.reject;
 final class CBC implements NonAADMode {
     private static final int IV_NUMBER_OF_BYTES = 16;
     private static final int START_INDEX_OF_ENCRYPTED_DATA = 16;
-    private static final int _16KB = 16 * 1024;
     private static final int END_OF_STREAM = -1;
+    private final int decryptBufferLoadSize;
+
+    CBC(final int decryptBufferLoadSize) {
+        isTrue(isInRange(decryptBufferLoadSize, 2, 1024));
+
+        this.decryptBufferLoadSize = decryptBufferLoadSize * 1024; //buffer size in KB
+    }
 
     @Override
     public Result<Throwable, byte[], InternalRejectReason> encrypt(final byte[] plainText, final Secret secret) {
@@ -118,7 +124,7 @@ final class CBC implements NonAADMode {
 
     private byte[] toBytes(final InputStream stream) throws IOException {
         final var buffer = new ByteArrayOutputStream();
-        final var data = new byte[_16KB];
+        final var data = new byte[decryptBufferLoadSize];
         int read;
 
         while ((read = stream.read(data, 0, data.length)) != END_OF_STREAM) {
