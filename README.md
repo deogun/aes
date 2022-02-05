@@ -4,9 +4,7 @@ This library allows you to create an AES service with following modes
 - Cipher Blocker Chaining (CBC)
 
 ### Known Limitations
-- The buffer load size in GCM and CBC are fixed to 16 KB when decrypting input streams. This is efficient on most
-  systems, but it might need to be configurable to allow performance tweaks. This is currently on the 
-  backlog and will become available in future releases.
+- None.
 
 ### Example usage – AES with GCM
 Instantiate an AES service with a secret
