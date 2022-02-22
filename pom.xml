@@ -19,8 +19,8 @@
     </licenses>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.apache.commons.commons-lang3>3.12.0</org.apache.commons.commons-lang3>
         <org.junit.jupiter.junit-jupiter-engine>5.8.2</org.junit.jupiter.junit-jupiter-engine>
@@ -61,6 +61,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
