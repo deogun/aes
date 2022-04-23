@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * AES mode for encrypting / decrypting data
  */
-public interface NonAADMode {
+public sealed interface NonAADMode permits CBC {
     Result<Throwable, byte[], InternalRejectReason> encrypt(byte[] plainText, Secret secret);
 
     Result<Throwable, byte[], InternalRejectReason> decrypt(byte[] encryptedData, Secret secret);

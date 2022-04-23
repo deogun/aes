@@ -11,7 +11,7 @@ import java.io.OutputStream;
 /**
  * AES mode for encrypting / decrypting data
  */
-public interface AADMode {
+public sealed interface AADMode permits GCM {
     Result<Throwable, OutputStream, InternalRejectReason> encrypt(byte[] plainText, OutputStream outputStream, Secret secret, AAD aad);
 
     Result<Throwable, byte[], InternalRejectReason> encrypt(byte[] plainText, Secret secret, AAD aad);
